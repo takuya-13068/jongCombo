@@ -11,6 +11,8 @@ let selectedTile = null; // 選択されたタイルを追跡する変数
 let firstSelectedTile = null; // 最初に選択されたタイルを追跡する変数
 let secondSelectedTile = null; // 2番目に選択されたタイルを追跡する変数
 let thirdSelectedTile = null; // 3番目に選択されたタイルを追跡する変数
+let removedTiles = []; // 消されたタイルを記録するための配列
+
 
 
 
@@ -61,6 +63,7 @@ function init() {
     canvas = document.getElementById("myCanvas");
     ctx2d = document.getElementById("myCanvas").getContext("2d");
     gameStartTime = performance.now(); // ゲーム開始時間を記録
+
 
     canvas.addEventListener('click', function(event) {
         if (mode === 0){
@@ -122,8 +125,9 @@ function init() {
                 }
             }
         }
-        
     });
+
+    
 
     tick();
 }
@@ -137,7 +141,18 @@ function tick() {
         drawTitle();
     } else if (mode === 1) {
         startGame();
-        
+
+        if (thirdSelectedTile != null) {
+            let firstTileIndex = tiles.indexOf(firstSelectedTile);
+            let secondTileIndex = tiles.indexOf(secondSelectedTile);
+            let thirdTileIndex = tiles.indexOf(thirdSelectedTile);
+
+            removeSelectedTiles();
+            displayRemovedTiles();
+            dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex); // インデックスを渡す
+            resetSelection();
+            console.log("oisu");
+        }
     } else if (mode === 2) {
         drawResult();
     }

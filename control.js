@@ -159,3 +159,93 @@ function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
     }
 
 }
+
+function removeSelectedTiles() {
+    // 選択されたタイルを消すロジック
+}
+
+function displayRemovedTiles() {
+    // 消えたタイルを上部に表示するロジック
+}
+
+function dropTiles() {
+    // タイルを下に移動させるロジック
+}
+
+function addNewTiles() {
+    // 上部に新しいタイルを追加するロジック
+}
+
+function dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex) {
+    // 消えたタイルの列を特定
+    let columnsToDrop = [firstTileIndex % (GameArea.width / TILES_SIZE.width),
+                         secondTileIndex % (GameArea.width / TILES_SIZE.width),
+                         thirdTileIndex % (GameArea.width / TILES_SIZE.width)];
+
+    tiles.forEach(tile => {
+        let tileIndex = tiles.indexOf(tile);
+        let columnIndex = tileIndex % (GameArea.width / TILES_SIZE.width);
+
+        if (columnsToDrop.includes(columnIndex)) {
+            let j = Math.floor(tileIndex / (GameArea.width / TILES_SIZE.width));
+            let newJ = j + 1; // 下に1マス移動
+            if (newJ < (GameArea.height / TILES_SIZE.height)) {
+                tile.x = parseInt(GameArea.x + TILES_SIZE.width * columnIndex);
+                tile.y = parseInt(GameArea.y + TILES_SIZE.height * newJ);
+            }
+        }
+    });
+
+    addNewTiles(columnsToDrop);
+}
+
+
+
+function addNewTiles(columnsToAdd) {
+    columnsToAdd.forEach(columnIndex => {
+        for (let j = 0; j < 3; j++) { // 空いた3マス分のタイルを追加
+            let newtile = CreateTile();
+            newtile.x = parseInt(GameArea.x + TILES_SIZE.width * columnIndex);
+            newtile.y = parseInt(GameArea.y + TILES_SIZE.height * j);
+            tiles.push(newtile);
+        }
+    });
+}
+
+
+
+
+function removeSelectedTiles() {
+    // 選択されたタイルのインデックスを取得
+    let firstTileIndex = tiles.indexOf(firstSelectedTile);
+    let secondTileIndex = tiles.indexOf(secondSelectedTile);
+    let thirdTileIndex = tiles.indexOf(thirdSelectedTile);
+
+    // 選択されたタイルを消す
+    tiles = tiles.filter(tile => tile !== firstSelectedTile && tile !== secondSelectedTile && tile !== thirdSelectedTile);
+
+    // 上にあるタイルを移動させるためのインデックスを更新
+    dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex);
+
+    // 消されたタイルを記録
+    removedTiles.push(firstSelectedTile, secondSelectedTile, thirdSelectedTile);
+}
+
+
+function displayRemovedTiles() {
+    // 上部に表示するロジック
+    let displayAreaHeight = HEIGHT * 1 / 10; // 上部の表示エリアの高さ
+    ctx2d.clearRect(0, 0, WIDTH, displayAreaHeight); // 上部エリアのクリア
+
+    removedTiles.forEach((tile, index) => {
+        let displayX = (WIDTH / removedTiles.length) * index;
+        let displayY = 0;
+        ctx2d.drawImage(tile.pic, displayX, displayY, TILES_SIZE.width / 2, TILES_SIZE.height / 2); // サイズを半分にして表示
+    });
+}
+
+function resetSelection() {
+    firstSelectedTile = null;
+    secondSelectedTile = null;
+    thirdSelectedTile = null;
+}
