@@ -2,11 +2,17 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    background:linear-gradient(to right, #115D4E, #054D3E);
 }
-
+a{
+    transition: all 0.3s;
+}
+a:hover{
+    opacity: 0.8;
+}
 #gameCanvas {
     border: 1px solid black;
 }
@@ -16,4 +22,38 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+.myHeader{
+    position: fixed;
+    top:0px;
+    height:60px;
+    gap:6px;
+    padding-right:12px;
+    width: calc(100% - 12px);
+    box-shadow: 3px 3px 3px 3px #4d181889;
+    background-color: #9D1818;
+    display: flex;
+    align-items: center;
+}
+.myHeader .logo{
+    height: 100%;
+    width: auto;
+}
+.myHeader .logo img{
+    height: 100%;
+    width: auto;
+}
+.myHeader .spacer{
+    flex:1;
+}
+.myHeader .menu-button{
+    height:35px;
+    width:auto;
+    box-shadow: 2px 2px 1px 1px #4d181889;
+}
+.dammyHeader{
+    height:60px;
+}
+.main-canvas{
+    height: calc(100vh - 60px);
 }

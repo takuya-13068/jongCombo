@@ -1,4 +1,4 @@
-let mode = 0; // モード管理用 0：タイトル画面 1：ゲーム画面 2：リザルト画面
+let mode = -1; // モード管理用 -1:ロード中　0：タイトル画面 1：ゲーム画面 2：リザルト画面
 let ctx2d;
 let canvas; // キャンバス要素のグローバル参照
 let t = 0; // 時間の管理用
@@ -6,6 +6,7 @@ let initialPfnw = performance.now(); // ロード時の起動時間をセット
 let gameStartTime = 0; // ゲーム開始時間
 let fieldCreated = false; // createFieldが実行されたかを追跡
 let imageLoaded = false; // 画像が読み込まれたかを追跡するための変数
+let loadedImgCnt = 0; // 画像が読み込まれた数
 let inin = new Image(); // グローバルスコープで画像を定義
 let selectedTile = null; // 選択されたタイルを追跡する変数
 let firstSelectedTile = null; // 最初に選択されたタイルを追跡する変数
@@ -13,6 +14,9 @@ let secondSelectedTile = null; // 2番目に選択されたタイルを追跡す
 let thirdSelectedTile = null; // 3番目に選択されたタイルを追跡する変数
 let removedTiles = []; // 消されたタイルを記録するための配列
 let gameData = {score:0}; // ゲームデータ score:スコア
+let imageFiles = {button:{}, tile:{}}; // 画像ファイルをここに読み込んでおく（毎回newしない）
+let titleObjList = []; // タイトル画面に描画するオブジェクトをリスト形式で保存
+let resultObjList = []; // リザルト画面に描画するオブジェクトをリスト形式で保存 
 
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベントを登録
@@ -28,26 +32,43 @@ window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベン
 
 
 function drawTitle(){//タイトル画面の描画
-    ctx2d.fillStyle = 'blue';
-    ctx2d.fillRect(WIDTH / 2 - 50, HEIGHT / 2, 100, 50);
-    ctx2d.fillStyle = 'white';
-    ctx2d.font = '20px Arial';
-    ctx2d.fillText('Start Game', WIDTH / 2 - 40, HEIGHT / 2 + 30);
+    ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+    for(i = 0; i < titleObjList.length; i++){
+        titleObjList[i].draw();
+    }
+}
+
+function drawResult(){//リザルト画面の描画
+    ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+    for(i = 0; i < resultObjList.length; i++){
+        resultObjList[i].draw();
+    }
+}
+
+function checkClickOfTitleObj(x, y){
+    for(i = 0; i < titleObjList.length; i++){
+        if(titleObjList[i].constructor.name == 'Button'){
+            if(titleObjList[i].checkClicked(x, y)){
+                titleObjList[i].clicked();
+            }
+        }
+    }
+}
+function checkClickOfResultObj(x, y){
+    for(i = 0; i < resultObjList.length; i++){
+        if(resultObjList[i].constructor.name == 'Button'){
+            if(resultObjList[i].checkClicked(x, y)){
+                resultObjList[i].clicked();
+            }
+        }
+    }
 }
 
 function startGame() {
-    if (!fieldCreated) {
-        CreateField();
-        fieldCreated = true;
-        gameStartTime = performance.now(); // ゲーム開始時間を記録
-    }
-
-    // 画像の読み込みが完了するのを待つ
-
-    if (performance.now() - gameStartTime > 10000) {
-        //ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-        mode = 1; // リザルト画面へ
-    }
+    createField();
+    fieldCreated = true;
+    ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+    gameStartTime = performance.now(); // ゲーム開始時間を記録
 }
 
 function init() {
@@ -55,27 +76,22 @@ function init() {
     ctx2d = document.getElementById("myCanvas").getContext("2d");
     gameStartTime = performance.now(); // ゲーム開始時間を記録
 
-
+    loadButtons();
     canvas.addEventListener('click', function(event) {
+        // クリックされた座標を取得
+        const rect = canvas.getBoundingClientRect();
+        const   viewX = event.clientX - rect.left,
+                viewY = event.clientY - rect.top;
+        const   scaleWidth =  canvas.clientWidth / canvas.width,
+                scaleHeight =  canvas.clientHeight / canvas.height;
+        const   x = Math.floor( viewX / scaleWidth ),
+                y = Math.floor( viewY / scaleHeight );
         if (mode === 0){
-            // クリックされた座標を取得
-            const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-
-            // 「ゲーム開始」ボタンの範囲内かチェック
-            if (x > WIDTH / 2 - 50 && x < WIDTH / 2 + 50 && y > HEIGHT / 2 && y < HEIGHT / 2 + 50) {
-                mode = 1; // ゲームモードをゲーム画面に切り替え
-                gameStartTime = performance.now(); // ゲーム開始時間をリセット
-                ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-            }
-        }
-
-        if (mode === 1) {
-            const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
+            checkClickOfTitleObj(x, y);
+            gameStartTime = performance.now(); // ゲーム開始時間をリセット
+        } else if(mode === 2){
+            checkClickOfResultObj(x, y);
+        } else if (mode === 1) {
             let clickedTile = null;
             let canSelect = true; // タイルが選択可能かどうかのフラグ
 
@@ -118,19 +134,36 @@ function init() {
         }
     });
 
+    setMode(-1);
     tick();
+}
+
+function setMode(nextMode){ // ❗modeが遷移するときに何らかの処理をやりたいことが多いから、mode=XXみたいに直接modeの変数の値変えるんじゃなくて、setMode(XX)を呼んで変える方式に統一してくれると助かるにちゃ
+    // モードの切り替え　モードの切替時には必ずこれを呼ぶ（直接変数modeを書き換えない）
+    if(nextMode == 0){
+        // ゲーム開始画面へ遷移するとき
+        titleObjList = [];
+        titleObjList.push(new Button('start', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
+    } else if(nextMode == 1){
+        startGame();
+    } else if (nextMode == 2){
+        // リザルト画面に遷移するとき
+        resultObjList.push(new Button('retry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2 - menuButtonHeight * 1.2, menuButtonHeight));
+        resultObjList.push(new Button('entry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
+    }
+    mode = nextMode;
 }
 
 function tick() {
     t = performance.now() - initialPfnw;
-    //ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
 
-
-    if (mode === 0) {
+    if (mode === -1){
+        if(loadedImgCnt >= Object.keys(imageFiles.button).length + Object.keys(imageFiles.tile).length) {
+            setMode(0);
+        }
+    } else if (mode === 0) {
         drawTitle();
     } else if (mode === 1) {
-        startGame();
-
         if (thirdSelectedTile != null) {
             let firstTileIndex = tiles.indexOf(firstSelectedTile);
             let secondTileIndex = tiles.indexOf(secondSelectedTile);
@@ -143,6 +176,10 @@ function tick() {
             resetSelection();
             console.log("oisu");
         }
+
+        if (performance.now() - gameStartTime > 10000) {
+            setMode(2); // リザルト画面へ
+        }    
     } else if (mode === 2) {
         drawResult();
     }
