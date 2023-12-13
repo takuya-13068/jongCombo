@@ -160,28 +160,15 @@ function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
 
 }
 
-function removeSelectedTiles() {
-    // 選択されたタイルを消すロジック
-}
 
-function displayRemovedTiles() {
-    // 消えたタイルを上部に表示するロジック
-}
-
-function dropTiles() {
-    // タイルを下に移動させるロジック
-}
-
-function addNewTiles() {
-    // 上部に新しいタイルを追加するロジック
-}
-
+/*
 function dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex) {
+    console.log(firstTileIndex + " " + secondTileIndex + ", " + thirdTileIndex);
     // 消えたタイルの列を特定
     let columnsToDrop = [firstTileIndex % (GameArea.width / TILES_SIZE.width),
                          secondTileIndex % (GameArea.width / TILES_SIZE.width),
                          thirdTileIndex % (GameArea.width / TILES_SIZE.width)];
-
+    console.log(columnsToDrop);
     tiles.forEach(tile => {
         let tileIndex = tiles.indexOf(tile);
         let columnIndex = tileIndex % (GameArea.width / TILES_SIZE.width);
@@ -198,6 +185,42 @@ function dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex) {
 
     addNewTiles(columnsToDrop);
 }
+*/
+
+
+function dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex) {
+    let columnsToDrop = [firstTileIndex % (GameArea.width / TILES_SIZE.width),
+                         secondTileIndex % (GameArea.width / TILES_SIZE.width),
+                         thirdTileIndex % (GameArea.width / TILES_SIZE.width)];
+
+    console.log(columnsToDrop);
+    // 列ごとにタイルを下に移動
+    columnsToDrop.forEach(columnIndex => {
+        // その列のタイルを上から順に処理
+        for (let j = 0; j < GameArea.height / TILES_SIZE.height; j++) {
+            let tileIndex = columnIndex + j * (GameArea.width / TILES_SIZE.width);
+            let tile = tiles.find((_, index) => index === tileIndex);
+
+            if (tile) {
+                // タイルを1つ下に移動
+                let newJ = j + 1;
+                if (newJ < GameArea.height / TILES_SIZE.height) {
+                    tile.x = parseInt(GameArea.x + TILES_SIZE.width * columnIndex);
+                    tile.y = parseInt(GameArea.y + TILES_SIZE.height * newJ);
+                } else {
+                    // 最上位のタイルに新しいタイルを追加
+                    let newTile = CreateTile();
+                    newTile.x = parseInt(GameArea.x + TILES_SIZE.width * columnIndex);
+                    newTile.y = parseInt(GameArea.y + TILES_SIZE.height * j);
+                    tiles.push(newTile);
+                }
+            }
+        }
+    });
+}
+
+
+
 
 
 
@@ -225,6 +248,7 @@ function removeSelectedTiles() {
     tiles = tiles.filter(tile => tile !== firstSelectedTile && tile !== secondSelectedTile && tile !== thirdSelectedTile);
 
     // 上にあるタイルを移動させるためのインデックスを更新
+    //console.log(firstTileIndex, secondTileIndex, thirdTileIndex);
     dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex);
 
     // 消されたタイルを記録

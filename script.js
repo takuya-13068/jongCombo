@@ -138,7 +138,8 @@ function tick() {
 
             removeSelectedTiles();
             displayRemovedTiles();
-            dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex); // インデックスを渡す
+            //dropTiles(); // dropTiles関数の呼び出し
+            addNewTiles();
             resetSelection();
             console.log("oisu");
         }
