@@ -27,7 +27,7 @@ class Tile {
     constructor(kind, value){
         this.kind = kind;
         this.value = value;
-        this.pic = new Image();
+        this.pic = new Image(); // ❗これだとタイルをnewする度にファイルを読みにいっちゃうから、modeが-1のときにまとめて画像ファイルをimageFiles.tilesの中に読み込んで、描画するときはimageFiles.tilesの中身経由でファイルを読むようにしてくれい　imageFiles.buttonで全く同じ処理やってるから参考に
         this.pic.src = './assets/img/' + FILE_NAME_MAP[this.kind] + String(this.value) + '_1.gif';
     }
 }
@@ -36,10 +36,28 @@ class Button{
         this.kind = kind;
         this.x = x;
         this.y = y;
-        this.width = size / 120 * 450;
-        this.height = size;
+        this.w = size / 120 * 450;
+        this.h = size;
     }
     draw(){
-        ctx2d.drawImage(imageFiles.button[this.kind], this.x, this.y, this.width, this.height);
+        ctx2d.drawImage(imageFiles.button[this.kind], this.x, this.y, this.w, this.h);
+    }
+    checkClicked(clickedX, clickedY){
+        console.log(clickedX, clickedY, this.x, this.w, this.y, this.h);
+        if(this.x < clickedX && clickedX < this.x + this.w){
+            if(this.y < clickedY && clickedY < this.y + this.h){
+                return true;
+            }
+        }
+        return false;
+    }
+    clicked(){
+        if(this.kind == 'start'){
+            setMode(1);
+        } else if(this.kind == 'retry'){
+            setMode(1);
+        } else if(this.kind == 'entry'){
+            setMode(0);
+        }
     }
 }
