@@ -12,9 +12,7 @@ let firstSelectedTile = null; // 最初に選択されたタイルを追跡す�
 let secondSelectedTile = null; // 2番目に選択されたタイルを追跡する変数
 let thirdSelectedTile = null; // 3番目に選択されたタイルを追跡する変数
 let removedTiles = []; // 消されたタイルを記録するための配列
-
-
-
+let gameData = {score:0}; // ゲームデータ score:スコア
 
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベントを登録
@@ -51,13 +49,6 @@ function startGame() {
         mode = 1; // リザルト画面へ
     }
 }
-
-
-// リザルト画面の描画
-function drawResult() {
-    // リザルト画面の描画ロジック
-}
-
 
 function init() {
     canvas = document.getElementById("myCanvas");
@@ -126,8 +117,6 @@ function init() {
             }
         }
     });
-
-    
 
     tick();
 }
