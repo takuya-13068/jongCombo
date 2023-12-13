@@ -45,8 +45,8 @@ function startGame() {
     // 画像の読み込みが完了するのを待つ
 
     if (performance.now() - gameStartTime > 10000) {
-        ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-        mode = 2; // リザルト画面へ
+        //ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+        mode = 1; // リザルト画面へ
     }
 }
 

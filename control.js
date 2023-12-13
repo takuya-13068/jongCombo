@@ -63,16 +63,12 @@ function CreateTile(){
     } catch (e){
         console.error("Error: ", e.message);
     }
-    
 }
 
 
 function ValidateSecondTile(selectedTile, newTile) {
     console.log("Selected Tile:", selectedTile);
     console.log("New Tile:", newTile);
-
-    // ここで隣接判定のロジックを実装（現在は単に情報を出力するだけ）
-    // 例: return (条件判定);
 
     let firstTileIndex = tiles.indexOf(firstSelectedTile);
     let newTileIndex = tiles.indexOf(newTile);
@@ -83,8 +79,32 @@ function ValidateSecondTile(selectedTile, newTile) {
     let newTileCol = newTileIndex % (GameArea.width / TILES_SIZE.width);
 
     // 隣接するタイルは行または列が最大1つの差であることを確認
-    return Math.abs(firstTileRow - newTileRow) <= 1 && Math.abs(firstTileCol - newTileCol) <= 1;
+    if(!(Math.abs(firstTileRow - newTileRow) <= 1 && Math.abs(firstTileCol - newTileCol) <= 1)) {
+        return false;
+    } else{
+        //1-9:萬子, 10-18: 筒子, 19-25: 字牌
+        const firstTileKind = selectedTile.kind;
+        const newTileKind = newTile.kind;
+        const firstTileNumber = selectedTile.value;
+        const newTileNumber = newTile.value;
+
+        if (firstTileKind === newTileKind) {
+            if(firstTileKind === "manzu" || firstTileKind === "pinzu"){ //萬子, 筒子
+                if(Math.abs(firstTileNumber - newTileNumber) <= 2 ) return true;
+                else return false;
+            } else{ //字牌
+                if (firstTileNumber === newTileNumber) return true;
+                else return false;
+            }
+        } else{
+            return false;
+        }
+    }
 }
+
+function compareFunc(a, b) {
+    return a - b;
+  }
 
 function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
     console.log("First Selected Tile:", firstSelectedTile);
@@ -104,13 +124,38 @@ function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
     let firstTileCol = firstTileIndex % (GameArea.width / TILES_SIZE.width);
     let secondTileCol = secondTileIndex % (GameArea.width / TILES_SIZE.width);
 
-    if (
+    if (!(
         (Math.abs(newTileRow - firstTileRow) <= 1 && Math.abs(newTileCol - firstTileCol) <= 1) ||
         (Math.abs(newTileRow - secondTileRow) <= 1 && Math.abs(newTileCol - secondTileCol) <= 1)
-    ) {
-        return true;
+    )) {
+        return false;
+    } else{
+        //1-9:萬子, 10-18: 筒子, 19-25: 字牌
+        const firstTileKind = firstSelectedTile.kind;
+        const secondTileKind = secondSelectedTile.kind;
+        const newTileKind = newTile.kind;
+        const firstTileNumber = firstSelectedTile.value;
+        const secondTileNumber = secondSelectedTile.value;
+        const newTileNumber = newTile.value;
+
+        if (firstTileKind === newTileKind && secondTileKind === newTileKind) {
+            if(firstTileKind === "manzu" || firstTileKind === "pinzu"){ 
+                //面子
+                if (firstTileNumber === newTileNumber && secondTileNumber === newTileNumber) return true;
+                //順子
+                else{
+                    let array = [firstTileNumber, secondTileNumber, newTileNumber];
+                    array.sort(compareFunc);
+                    if(array[1] - array[0] === 1 && array[2] - array[1] === 1 && !(array[1] === array[2])) return true;
+                    else return false;
+                }
+            } else{
+                if (firstTileNumber === newTileNumber && secondTileNumber === newTileNumber) return true;
+                else return false;
+            }
+        } else{
+            return false;
+        }
     }
-    
-    // 3番目のタイルが一つ目または二つ目のタイルとも隣接していない場合
-    return false;
+
 }
