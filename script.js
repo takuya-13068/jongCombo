@@ -7,7 +7,10 @@ let gameStartTime = 0; // ゲーム開始時間
 let fieldCreated = false; // createFieldが実行されたかを追跡
 let imageLoaded = false; // 画像が読み込まれたかを追跡するための変数
 let inin = new Image(); // グローバルスコープで画像を定義
-
+let selectedTile = null; // 選択されたタイルを追跡する変数
+let firstSelectedTile = null; // 最初に選択されたタイルを追跡する変数
+let secondSelectedTile = null; // 2番目に選択されたタイルを追跡する変数
+let thirdSelectedTile = null; // 3番目に選択されたタイルを追跡する変数
 
 
 
@@ -41,9 +44,9 @@ function startGame() {
 
     // 画像の読み込みが完了するのを待つ
 
-    if (performance.now() - gameStartTime > 3000) {
-        //ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-        mode = 1; // リザルト画面へ
+    if (performance.now() - gameStartTime > 10000) {
+        ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+        mode = 2; // リザルト画面へ
     }
 }
 
@@ -60,18 +63,66 @@ function init() {
     gameStartTime = performance.now(); // ゲーム開始時間を記録
 
     canvas.addEventListener('click', function(event) {
-        // クリックされた座標を取得
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+        if (mode === 0){
+            // クリックされた座標を取得
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
 
-        // 「ゲーム開始」ボタンの範囲内かチェック
-        if (x > WIDTH / 2 - 50 && x < WIDTH / 2 + 50 && y > HEIGHT / 2 && y < HEIGHT / 2 + 50) {
-            mode = 1; // ゲームモードをゲーム画面に切り替え
-            gameStartTime = performance.now(); // ゲーム開始時間をリセット
-            ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-
+            // 「ゲーム開始」ボタンの範囲内かチェック
+            if (x > WIDTH / 2 - 50 && x < WIDTH / 2 + 50 && y > HEIGHT / 2 && y < HEIGHT / 2 + 50) {
+                mode = 1; // ゲームモードをゲーム画面に切り替え
+                gameStartTime = performance.now(); // ゲーム開始時間をリセット
+                ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+            }
         }
+
+        if (mode === 1) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            let clickedTile = null;
+            let canSelect = true; // タイルが選択可能かどうかのフラグ
+
+        
+            for (let tile of tiles) { //選択されたタイルの情報をとる
+                let i = tiles.indexOf(tile) % (GameArea.width / TILES_SIZE.width);
+                let j = Math.floor(tiles.indexOf(tile) / (GameArea.width / TILES_SIZE.width));
+                let tileX = parseInt(GameArea.x + TILES_SIZE.width * i);
+                let tileY = parseInt(GameArea.y + TILES_SIZE.height * j);
+        
+                if (x >= tileX && x < tileX + TILES_SIZE.width && y >= tileY && y < tileY + TILES_SIZE.height) {
+                    clickedTile = tile;
+                    break; // タイルがクリックされたらループを抜ける
+                }
+            }
+        
+            if (clickedTile) { // 選択できるか条件
+                if (!firstSelectedTile) {
+                    firstSelectedTile = clickedTile;
+                } else if (!secondSelectedTile && ValidateSecondTile(firstSelectedTile, clickedTile)) {
+                    secondSelectedTile = clickedTile;
+                } else if (secondSelectedTile && ValidateThirdTile(firstSelectedTile, secondSelectedTile, clickedTile)) {
+                    // 3番目のタイルを選択
+                    console.log("Third Tile selected");
+                    thirdSelectedTile = clickedTile;
+                } else {
+                    canSelect = false; // タイルが選択できない場合
+                }
+        
+                //selectedTile = clickedTile; // 選択したタイルを設定
+                console.log("Selected Tile:", clickedTile); // 選択したタイルの情報を出力
+                drawTiles(); // タイルを再描画
+
+                if (!canSelect) {
+                    ctx2d.fillStyle = 'red';
+                    ctx2d.font = 'bold 20px Arial';
+                    ctx2d.fillText('You can not choose the tile!', 10, 30);
+                }
+            }
+        }
+        
     });
 
     tick();
@@ -86,6 +137,7 @@ function tick() {
         drawTitle();
     } else if (mode === 1) {
         startGame();
+        
     } else if (mode === 2) {
         drawResult();
     }
