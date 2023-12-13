@@ -17,3 +17,15 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+.myHeader{
+    position: fixed;
+    top:0px;
+    height:60px;
+    width: 100%;
+    box-shadow: 3px 3px 3px 3px #4d181889;
+    background-color: #9D1818;
+}
+.myHeader .logo{
+    height: 100%;
+    width: auto;
+}
