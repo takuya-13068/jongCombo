@@ -14,6 +14,7 @@ let thirdSelectedTile = null; // 3番目に選択されたタイルを追跡す�
 let removedTiles = []; // 消されたタイルを記録するための配列
 let gameData = {score:0}; // ゲームデータ score:スコア
 
+
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベントを登録
     window.addEventListener("keydown", function(e){

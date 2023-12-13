@@ -1,6 +1,7 @@
 const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
+const COLSET = {green: '#116D6E'};
 
 const score = [100,200,400,800];
 
@@ -17,13 +18,14 @@ const role = {"All Simples": 1, "Double-Run": 1, "Value Tiles": 1,
     };
 
 //麻雀牌
-const TILES_SIZE = {width: WIDTH/6, height: HEIGHT * 3 /6 / 5};
+const TILES_SIZE = {width: WIDTH/6, height: HEIGHT * 3 /5 / 5};
+const FILE_NAME_MAP = {'manzu' : 'p_ms', 'pinzu' : 'p_ps', 'sozu' : 'p_ss', 'jihai' : 'p_ji'};
 const tile_number = 9 + 9 + 7; //manzu, pinzu, jihai
 class Tile {
     constructor(kind, value){
         this.kind = kind;
         this.value = value;
         this.pic = new Image();
-        this.pic.src = './assets/img/' + this.kind + '_' + String(this.value) + '.png';
+        this.pic.src = './assets/img/' + FILE_NAME_MAP[this.kind] + String(this.value) + '_1.gif';
     }
 }
