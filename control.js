@@ -10,7 +10,6 @@ function drawTiles() {
         
         ctx2d.drawImage(tile.pic, tileX, tileY, TILES_SIZE.width, TILES_SIZE.height);
 
-
         if (tile === firstSelectedTile || tile === secondSelectedTile || tile === thirdSelectedTile) {
             ctx2d.fillStyle = 'rgba(135, 206, 235, 0.5)';
             ctx2d.fillRect(tileX, tileY, TILES_SIZE.width, TILES_SIZE.height);
@@ -18,7 +17,7 @@ function drawTiles() {
     }
 }
 
-function CreateField() {
+function createField() {
     tiles = [];
     imagesLoaded = 0;
     let totalTiles = (GameArea.width / TILES_SIZE.width) * (GameArea.height / TILES_SIZE.height);
@@ -41,6 +40,15 @@ function CreateField() {
     }
 }
 
+function loadButtons(){
+    for (i = 0; i < buttonList.length; i++){
+        imageFiles.button[buttonList[i]] = new Image();
+        imageFiles.button[buttonList[i]].src = './assets/img/button_' + buttonList[i]  + '.png';
+        imageFiles.button[buttonList[i]].onload = function(){
+            loadedImgCnt++;
+        }
+    }
+}
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);

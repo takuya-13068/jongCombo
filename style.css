@@ -54,3 +54,6 @@ a:hover{
 .dammyHeader{
     height:60px;
 }
+.main-canvas{
+    height: calc(100vh - 60px);
+}
