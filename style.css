@@ -5,7 +5,9 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background:linear-gradient(to right, #115D4E, #054D3E);
+    background-image: url('./assets/img/back.webp');
+    background-repeat: repeat;
+    background-size: 600px;
 }
 a{
     transition: all 0.3s;
@@ -56,4 +58,5 @@ a:hover{
 }
 .main-canvas{
     height: calc(100vh - 60px);
+    min-height:660px;
 }
