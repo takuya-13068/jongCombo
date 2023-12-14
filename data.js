@@ -2,6 +2,7 @@ const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
 const COLSET = {green: '#116D4E'};
+const TIME_MAX = 10; // ゲーム時間（秒）
 const buttonList = ['start', 'entry', 'retry']; // img内に'button_XXX' のファイルを用意する
 const otherImagesList = ['logo', 'howto']; // img内に'XX.webp'のファイルを用意する
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
@@ -82,5 +83,34 @@ class Button extends MyImage{
         } else if(this.kind == 'entry'){
             setMode(0);
         }
+    }
+}
+class Timer{
+    constructor(x, y, size){
+        this.x = x;
+        this.y = y;
+        this.w = size / 8 * 5;
+        this.h = size;
+    }
+    draw(){
+        var sec = TIME_MAX - (performance.now() - gameData.gameStartTime)/1000;
+        ctx2d.clearRect(this.x, this.y, this.w, this.h);
+        for(i = 0; i < 5; i++){
+            var drawSec = sec;
+            if(i > 2){
+                if(i == 3){
+                    drawSec = sec / 10;
+                }
+                drawSec = Math.floor(drawSec);
+            } else if(i == 2) {
+                drawSec = 'colon';
+            } else {
+                drawSec = '0';
+            }
+            if(sec <= 0){
+                drawSec = '0';
+            }
+            ctx2d.drawImage(imageFiles[drawSec], this.x + i * this.w, this.y, this.w, this.h);
+        }  
     }
 }
