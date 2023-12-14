@@ -2,6 +2,8 @@ let tiles = []; // ここにタイルの情報を格納する
 let imagesLoaded = 0; // 読み込まれた画像の数
 
 function drawTiles() {
+    ctx2d.fillStyle = COLSET['green'];
+    ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
     for (let tile of tiles) {
         let i = tiles.indexOf(tile) % (GameArea.width / TILES_SIZE.width);
         let j = Math.floor(tiles.indexOf(tile) / (GameArea.width / TILES_SIZE.width));

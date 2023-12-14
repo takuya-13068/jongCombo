@@ -79,7 +79,7 @@ function startGame() {
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
     gameData.gameStartTime = performance.now(); // ゲーム開始時間を記録
     gameObjList = [];
-    gameObjList.push(new Timer(WIDTH*0.6, HEIGHT*0.1, HEIGHT*0.05));
+    gameObjList.push(new Timer(WIDTH*0.68, 30, HEIGHT*0.05));
 }
 
 function init() {
