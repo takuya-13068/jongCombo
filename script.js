@@ -80,6 +80,7 @@ function init() {
 
     loadButtons();
     loadOtherImages();
+    loadText();
     canvas.addEventListener('click', function(event) {
         // クリックされた座標を取得
         const rect = canvas.getBoundingClientRect();
@@ -87,8 +88,8 @@ function init() {
                 viewY = event.clientY - rect.top;
         const   scaleWidth =  canvas.clientWidth / canvas.width,
                 scaleHeight =  canvas.clientHeight / canvas.height;
-        const   x = Math.floor( viewX / scaleWidth ),
-                y = Math.floor( viewY / scaleHeight );
+        const   x = Math.floor( viewX / scaleWidth),
+                y = Math.floor( viewY / scaleHeight);
         if (mode === 0){
             checkClickOfTitleObj(x, y);
             gameStartTime = performance.now(); // ゲーム開始時間をリセット
@@ -146,8 +147,9 @@ function setMode(nextMode){ // ❗modeが遷移するときに何らかの処理
     if(nextMode == 0){
         // ゲーム開始画面へ遷移するとき
         titleObjList = [];
-        titleObjList.push(new Button('start', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2 + 100, menuButtonHeight));
-        titleObjList.push(new MyImage('logo', 'center', HEIGHT/4, titleLogoHeight));
+        titleObjList.push(new MyImage('logo', 'center', HEIGHT*0.2, titleLogoHeight));
+        titleObjList.push(new Button('start', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), HEIGHT*0.5, menuButtonHeight));
+        titleObjList.push(new MyImage('howto', 'center', HEIGHT*0.7, titleLogoHeight));
     } else if(nextMode == 1){
         startGame();
     } else if (nextMode == 2){

@@ -58,7 +58,15 @@ function loadOtherImages(){
         }
     }
 }
-
+function loadText(){
+    for (i = 0; i < textImageList.length; i++){
+        imageFiles[textImageList[i]] = new Image();
+        imageFiles[textImageList[i]].src = './assets/text/' + textImageList[i]  + '.webp';
+        imageFiles[textImageList[i]].onload = function(){
+            loadedImgCnt++;
+        }
+    }
+}
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
