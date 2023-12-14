@@ -1,9 +1,11 @@
 const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
-const COLSET = {green: '#116D6E'};
+const COLSET = {green: '#115D4E'};
 const buttonList = ['start', 'entry', 'retry']; // img内に'button_XXX' のファイルを用意する
-const menuButtonHeight = 120;
+const otherImagesList = ['logo']; // img内に'XX.webp'のファイルを用意する
+const menuButtonHeight = 90;
+const titleLogoHeight = 280;
 
 const score = [100,200,400,800];
 
@@ -31,19 +33,39 @@ class Tile {
         this.pic.src = './assets/img/' + FILE_NAME_MAP[this.kind] + String(this.value) + '_1.gif';
     }
 }
-class Button{
+class MyImage{
     constructor (kind, x, y, size){
         this.kind = kind;
         this.x = x;
         this.y = y;
-        this.w = size / 120 * 450;
         this.h = size;
+        this.w = size / imageFiles[kind].height * imageFiles[kind].width;
+        this.wave = false;
+        if(this.x == 'center'){
+            this.x = (WIDTH - this.w)/2;
+        }
     }
     draw(){
-        ctx2d.drawImage(imageFiles.button[this.kind], this.x, this.y, this.w, this.h);
+        let drawy = this.y;
+        if(this.wave){
+            // 振動
+            drawy = drawy + 10 * Math.max(0, Math.sin(t * 0.005)-0.3);
+        }
+        if(this.shadow){
+            ctx2d.fillStyle="#00000060";
+            ctx2d.fillRect(this.x+5, drawy+5, this.w, this.h);
+        }    
+        ctx2d.drawImage(imageFiles[this.kind], this.x, drawy, this.w, this.h);
+    }
+}
+
+class Button extends MyImage{
+    constructor (kind, x, y, size){
+        super(kind, x, y, size);
+        this.wave = true;
+        this.shadow = true;
     }
     checkClicked(clickedX, clickedY){
-        console.log(clickedX, clickedY, this.x, this.w, this.y, this.h);
         if(this.x < clickedX && clickedX < this.x + this.w){
             if(this.y < clickedY && clickedY < this.y + this.h){
                 return true;

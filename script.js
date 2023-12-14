@@ -14,7 +14,7 @@ let secondSelectedTile = null; // 2番目に選択されたタイルを追跡す
 let thirdSelectedTile = null; // 3番目に選択されたタイルを追跡する変数
 let removedTiles = []; // 消されたタイルを記録するための配列
 let gameData = {score:0}; // ゲームデータ score:スコア
-let imageFiles = {button:{}, tile:{}}; // 画像ファイルをここに読み込んでおく（毎回newしない）
+let imageFiles = {}; // 画像ファイルをここに読み込んでおく（毎回newしない）
 let titleObjList = []; // タイトル画面に描画するオブジェクトをリスト形式で保存
 let resultObjList = []; // リザルト画面に描画するオブジェクトをリスト形式で保存 
 
@@ -33,6 +33,8 @@ window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベン
 
 function drawTitle(){//タイトル画面の描画
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx2d.fillStyle = COLSET['green'];
+    ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
     for(i = 0; i < titleObjList.length; i++){
         titleObjList[i].draw();
     }
@@ -77,6 +79,7 @@ function init() {
     gameStartTime = performance.now(); // ゲーム開始時間を記録
 
     loadButtons();
+    loadOtherImages();
     canvas.addEventListener('click', function(event) {
         // クリックされた座標を取得
         const rect = canvas.getBoundingClientRect();
@@ -143,7 +146,8 @@ function setMode(nextMode){ // ❗modeが遷移するときに何らかの処理
     if(nextMode == 0){
         // ゲーム開始画面へ遷移するとき
         titleObjList = [];
-        titleObjList.push(new Button('start', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
+        titleObjList.push(new Button('start', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2 + 100, menuButtonHeight));
+        titleObjList.push(new MyImage('logo', 'center', HEIGHT/4, titleLogoHeight));
     } else if(nextMode == 1){
         startGame();
     } else if (nextMode == 2){
@@ -158,7 +162,7 @@ function tick() {
     t = performance.now() - initialPfnw;
 
     if (mode === -1){
-        if(loadedImgCnt >= Object.keys(imageFiles.button).length + Object.keys(imageFiles.tile).length) {
+        if(loadedImgCnt >= Object.keys(imageFiles).length) {
             setMode(0);
         }
     } else if (mode === 0) {

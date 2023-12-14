@@ -42,9 +42,18 @@ function createField() {
 
 function loadButtons(){
     for (i = 0; i < buttonList.length; i++){
-        imageFiles.button[buttonList[i]] = new Image();
-        imageFiles.button[buttonList[i]].src = './assets/img/button_' + buttonList[i]  + '.png';
-        imageFiles.button[buttonList[i]].onload = function(){
+        imageFiles[buttonList[i]] = new Image();
+        imageFiles[buttonList[i]].src = './assets/img/button_' + buttonList[i]  + '.png';
+        imageFiles[buttonList[i]].onload = function(){
+            loadedImgCnt++;
+        }
+    }
+}
+function loadOtherImages(){
+    for (i = 0; i < otherImagesList.length; i++){
+        imageFiles[otherImagesList[i]] = new Image();
+        imageFiles[otherImagesList[i]].src = './assets/img/' + otherImagesList[i]  + '.webp';
+        imageFiles[otherImagesList[i]].onload = function(){
             loadedImgCnt++;
         }
     }
