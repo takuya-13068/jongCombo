@@ -192,7 +192,7 @@ function removeSelectedTiles() {
     selectedTileIndices = [...new Set(selectedTileIndices)];
 
     // タイルを削除し、必要なタイルを移動
-    console.log(selectedTileIndices);
+    //console.log(selectedTileIndices);
     selectedTileIndices.forEach(tileIndex => {
         // アニメーションの追加
         pos = getTilePosFromIndex(tileIndex);
@@ -243,7 +243,17 @@ function updateScore(){
     // calculate role point
     else if(reachMode){
         try{
+            removedTiles.push(firstSelectedTile, secondSelectedTile);
+            displayRemovedTiles();
             calculateRole();
+
+            // 役のエフェクトを入れてください
+
+            // reset
+            combo = 0;
+            removedTiles = []; // Reset removedtile
+            reachMode = false;
+            resetSelection();
         } catch (e){
             console.error("ERROR: " , e.message);
         }
@@ -256,12 +266,12 @@ function validateOneNine(index){
 }
 
 function calculateRole(){
-    let role_set = [];
-    let han = 0;
-    let tile_set = []; // 牌情報
-    let tiles_kind = []; //種類
-    let tiles_style = []; //面子、順子判定
-    let val = true;
+    var role_set = [];
+    var han = 0;
+    var tile_set = []; // 牌情報
+    var tiles_kind = []; //種類
+    var tiles_style = []; //面子、順子判定
+    var val = true;
 
     // 牌登録
     for(let i=0; i< 4; i++){
@@ -270,42 +280,46 @@ function calculateRole(){
         if(tile_set[i][0].value === tile_set[i][1].value) tiles_style[i] = true; // 面子
         else tiles_style[i] = false; // 順子
     } 
-    tile_set[4] = [removedTiles[4*3], removedTiles[4*3+1]]; //雀頭
+    tile_set[4] = [firstSelectedTile, secondSelectedTile]; //雀頭
     tiles_kind[4] = tile_set[4][0].kind;
+    console.log(tiles_kind);
+    console.log(tiles_style);
 
     //立直
-    role_set.append("Reach");
+    role_set.push("Reach");
     
     //タンヤオ
-    if(tile_set[4][0].kind != "jihai" && !validateOneNine(tile_set[4][0].value)){
+    if(!tiles_kind.includes("jihai") && !validateOneNine(tile_set[4][0].value)){
         for (const tiles_s of tile_set){
             if(validateOneNine(tiles_s[0].value) || validateOneNine(tiles_s[1].value) || validateOneNine(tiles_s[1].value)) {
                 val = false;
                 break
             }
-        } if(val) role_set.append("ALL Simples");
+        } if(val) role_set.push("ALL Simples");
     }
 
     //一盃口、二盃口
     val = true;
 
     //混一色、清一色
-    const set_kind = Array.from(new Set(tiles_kind));
-    if(set_kind.length) role_set.append("Full Flush");
-    else if(set_kind.length == 2 && set_kind.includes("jihai")) role_set.append("Half Flush");
+    var set_kind = Array.from(new Set(tiles_kind));
+    if(set_kind.length == 1) role_set.push("Full Flush");
+    else if(set_kind.length == 2 && set_kind.includes("jihai")) role_set.push("Half Flush");
 
     //三暗刻、四暗刻
     val = true;
     cnt_type = tiles_style.filter(value => value === true).length;
-    if(cnt_type === 4) role_set.append("Four Triples");
-    else if(cnt_type === 3) role_set.append("Three Triples");
+    if(cnt_type === 4) role_set.push("Four Triples");
+    else if(cnt_type === 3) role_set.push("Three Triples");
 
     // 小三元、大三元
 
     // 名称から飜計算
     for (const name of role_set){
+        console.log(name);
         han += role[name];
     } 
-    if(han >13) score += 32000;
-    else score += role_score[han];
+    console.log(han);
+    if(han > 13) gameData.score += 32000;
+    else gameData.score+= role_score[han];
 }
