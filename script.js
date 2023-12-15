@@ -145,7 +145,6 @@ function init() {
             } else if (secondSelectedTile && currentTile !== firstSelectedTile && currentTile !== secondSelectedTile && ValidateThirdTile(firstSelectedTile, secondSelectedTile, currentTile)) {
                 thirdSelectedTile = currentTile;
             }
-
             drawTiles(); // タイルを再描画
         }
         
@@ -169,7 +168,7 @@ function init() {
             checkClickOfTitleObj(x, y);
         } else if(mode === 2){
             checkClickOfResultObj(x, y);
-        } else if (mode === 1) {
+        } /*else if (mode === 1) {
             let clickedTile = null;
             let canSelect = true; // タイルが選択可能かどうかのフラグ
         
@@ -209,7 +208,7 @@ function init() {
                 console.log("Selected Tile:", clickedTile); // 選択したタイルの情報を出力
                 drawTiles(); // タイルを再描画
             }
-        }
+        }*/
     });
 
     setMode(-1);
