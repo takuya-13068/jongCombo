@@ -1,6 +1,4 @@
-let tiles = []; // ここにタイルの情報を格納する
-let imagesLoaded = 0; // 読み込まれた画像の数
-let totalTiles; //title total
+
 
 
 function compareFunc(a, b) {
@@ -315,5 +313,16 @@ function resetSelection() {
 }
 
 function updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile){
-    gameData.score += 100;
+    // combo score
+    if(combo < 4) {
+        combo += 1;
+        gameData.score += 100 * (2 ** (combo - 1));
+        comboLimitTime = 5.0;
+    }
+
+    
+
+    // calculate role point
+
+
 }
