@@ -26,14 +26,17 @@ let comboLimitTime = 0; // comboが持続するタイマー
 let combostart;
 let reachMode = false;
 
+// スワイプ操作の座標を保存
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベントを登録
     window.addEventListener("keydown", function(e){
         if (e.key=="ArrowUp" || e.key=="ArrowDown" || e.key=="ArrowLeft" || e.key=="ArrowRight"){ //押されたのが方向キーだったら
             e.preventDefault();//スクロールを防ぐ
-            if(mode==1){ //ゲーム画面なら
-                moveCharacter(e.key);
-            } 
         }
     });
 });
@@ -95,6 +98,21 @@ function startGame() {
     gameObjList.push(new ScoreBoard('center', 100, HEIGHT*0.1));
 }
 
+function getTileAtPosition(x, y) { // x, y 座標にあるタイルを見つけて返す
+    for (let tile of tiles) {
+        let i = tiles.indexOf(tile) % parseInt(GameArea.width / TILES_SIZE.width);
+        let j = Math.floor(tiles.indexOf(tile) / parseInt(GameArea.width / TILES_SIZE.width));
+        let tileX = parseInt(GameArea.x + TILES_SIZE.width * i);
+        let tileY = parseInt(GameArea.y + TILES_SIZE.height * j);
+
+        if (x >= tileX && x < tileX + TILES_SIZE.width && y >= tileY && y < tileY + TILES_SIZE.height) {
+            return tile;
+        }
+    }
+    return null;
+}
+
+
 function init() {
     canvas = document.getElementById("myCanvas");
     ctx2d = document.getElementById("myCanvas").getContext("2d");
@@ -103,6 +121,41 @@ function init() {
     loadOtherImages();
     loadText();
     loadAnimation();
+    
+    canvas.addEventListener('touchstart', function(e) {
+        //e.preventDefault();
+        let touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        firstSelectedTile = getTileAtPosition(touchStartX, touchStartY);
+    }, { passive: false });
+    
+    canvas.addEventListener('touchmove', function(e) {
+        //e.preventDefault();
+        let touch = e.touches[0];
+        touchEndX = touch.clientX;
+        touchEndY = touch.clientY;
+    
+        let currentTile = getTileAtPosition(touchEndX, touchEndY);
+        if (currentTile) {
+            if (!firstSelectedTile) {
+                firstSelectedTile = currentTile;
+            } else if (!secondSelectedTile && currentTile !== firstSelectedTile && ValidateSecondTile(firstSelectedTile, currentTile, reachMode)) {
+                secondSelectedTile = currentTile;
+            } else if (secondSelectedTile && currentTile !== firstSelectedTile && currentTile !== secondSelectedTile && ValidateThirdTile(firstSelectedTile, secondSelectedTile, currentTile)) {
+                thirdSelectedTile = currentTile;
+            }
+
+            drawTiles(); // タイルを再描画
+        }
+        
+    }, { passive: false });
+    
+    canvas.addEventListener('touchend', function(e) {
+        //e.preventDefault();
+        resetSelection();
+    }, { passive: false });
+
     canvas.addEventListener('click', function(event) {
         // クリックされた座標を取得
         const rect = canvas.getBoundingClientRect();
@@ -197,6 +250,7 @@ function tick() {
             if(comboLimitTime <= 0){//combo終了
                 combo = 0;
                 removedTiles = []; // Reset removedtile
+                reachMode = false;
             }
         }
         if (reachMode){ //雀頭選択立直モード
