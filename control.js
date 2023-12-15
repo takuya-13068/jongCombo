@@ -249,6 +249,7 @@ function updateScore(){
             gameObjList.push(new GroupTile(firstSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
             displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
             gameObjList.push(new GroupTile(secondSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
+
             calculateRole();
 
             // 役のエフェクトを入れてください
@@ -257,6 +258,9 @@ function updateScore(){
             combo = 0;
             removedTiles = []; // Reset removedtile
             reachMode = false;
+            gameObjList = gameObjList.filter(function(v){
+                return v.constructor.name != 'GroupTile';
+            })
             resetSelection();
         } catch (e){
             console.error("ERROR: " , e.message);
@@ -267,6 +271,11 @@ function updateScore(){
 function validateOneNine(index){
     if (index == 1 && index == 9) return true;
     else return false;
+}
+
+function validateDragon(kind, value){
+    if (kind == "jihai") return value
+    else return -1
 }
 
 function calculateRole(){
@@ -286,8 +295,6 @@ function calculateRole(){
     } 
     tile_set[4] = [firstSelectedTile, secondSelectedTile]; //雀頭
     tiles_kind[4] = tile_set[4][0].kind;
-    console.log(tiles_kind);
-    console.log(tiles_style);
 
     //立直
     role_set.push("Reach");
@@ -317,6 +324,28 @@ function calculateRole(){
     else if(cnt_type === 3) role_set.push("Three Triples");
 
     // 小三元、大三元
+    val = true;
+    var little = [false, false, false];
+    var big = [false, false, false];
+    const jud_dragon = [{kind: tiles_kind[0], value: tile_set[0][0].value}, 
+                        {kind: tiles_kind[1], value: tile_set[1][0].value},
+                        {kind: tiles_kind[2], value: tile_set[2][0].value},
+                        {kind: tiles_kind[3], value: tile_set[3][0].value},
+                        {kind: tiles_kind[4], value: tile_set[4][0].value}]
+    for (let i=0; i<5; i++){
+        out = validateDragon(jud_dragon[i].kind, jud_dragon[i].value);
+        if(out != -1){
+            if(i != 4){
+                big[out] = true;
+                little[out] = true;
+            } else{
+                little[out] = true;
+            }
+        } 
+    }
+    if(!big.includes(false)) role_set.push("Big Dragons");
+    else if(!little.includes(false)) role_set.push("Little Dragons");
+
 
     // 名称から飜計算
     console.log(role_set);
