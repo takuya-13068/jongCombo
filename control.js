@@ -75,6 +75,8 @@ function CreateTile(x, y){
 }
 
 
+
+
 function ValidateSecondTile(selectedTile, newTile, reachMode) {
     let firstTileIndex = tiles.indexOf(firstSelectedTile);
     let newTileIndex = tiles.indexOf(newTile);

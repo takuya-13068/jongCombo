@@ -23,6 +23,8 @@ function touchStartEvent(){
                 scaleHeight =  canvas.clientHeight / canvas.height;
         const   x = Math.floor( touchStartX / scaleWidth),
                 y = Math.floor( touchStartY / scaleHeight);
+        lastTouchX = touch.clientX;
+        lastTouchY = touch.clientY;
         if (mode === 0){
             checkClickOfTitleObj(x, y);
         } else if(mode === 2){
@@ -30,6 +32,7 @@ function touchStartEvent(){
         } else if(mode === 1){
             checkClickOfGameObj(x, y);
             firstSelectedTile = getTileAtPosition(x, y);
+            select.play();
         }
 
     }, { passive: false });
@@ -46,6 +49,9 @@ function touchMoveEvent(){
                 scaleHeight =  canvas.clientHeight / canvas.height;
         const   x = Math.floor( touchStartX / scaleWidth),
                 y = Math.floor( touchStartY / scaleHeight);
+        lastTouchX = touch.clientX;
+        lastTouchY = touch.clientY;
+            
     
         let currentTile = getTileAtPosition(x, y);
         if (currentTile) {
@@ -53,8 +59,10 @@ function touchMoveEvent(){
                 firstSelectedTile = currentTile;
             } else if (!secondSelectedTile && currentTile !== firstSelectedTile && ValidateSecondTile(firstSelectedTile, currentTile, reachMode)) {
                 secondSelectedTile = currentTile;
+                select.play();
             } else if (secondSelectedTile && currentTile !== firstSelectedTile && currentTile !== secondSelectedTile && ValidateThirdTile(firstSelectedTile, secondSelectedTile, currentTile)) {
                 thirdSelectedTile = currentTile;
+                select.play();
             }
             drawTiles(); // タイルを再描画
         }
@@ -65,6 +73,25 @@ function touchMoveEvent(){
 function touchEndEvent(){
     canvas.addEventListener('touchend', function(e) {
         e.preventDefault();
+        if(!secondSelectedTile){
+            const rect = canvas.getBoundingClientRect();
+            let touch = e.touches[0];
+            const touchStartX = lastTouchX - rect.left;
+            const touchStartY = lastTouchY - rect.top;
+            const   scaleWidth =  canvas.clientWidth / canvas.width,
+                    scaleHeight =  canvas.clientHeight / canvas.height;
+            const   x = Math.floor( touchStartX / scaleWidth),
+                    y = Math.floor( touchStartY / scaleHeight);
+            
+            let currentTile = getTileAtPosition(x, y);
+            deleteIndex = tiles.indexOf(currentTile);
+            while (deleteIndex >= TILES_SIZE.row) {
+                moveTileDown(deleteIndex);
+                deleteIndex -= TILES_SIZE.row;
+            }
+            // 最上部のタイルを新規生成
+            moveTileDown(deleteIndex);
+        }
         resetSelection();
     }, { passive: false });
 }
@@ -89,6 +116,7 @@ function clickEvent(){
             let clickedTile = null;
             let canSelect = true; // タイルが選択可能かどうかのフラグ
             checkClickOfGameObj (x, y);
+            
         
             for (let tile of tiles) { //選択されたタイルの情報をとる
                 let i = tiles.indexOf(tile) % parseInt(GameArea.width / TILES_SIZE.width);
@@ -103,7 +131,8 @@ function clickEvent(){
             }
         
             if (clickedTile) { // 選択できるか条件
-                console.log("clikced!");
+                
+                /*
                 // 選択解除
                 if (clickedTile === firstSelectedTile) {
                     firstSelectedTile = null;
@@ -122,8 +151,9 @@ function clickEvent(){
                 } else {
                     canSelect = false; // タイルが選択できない場合
                 }
+                */
         
-                console.log("Selected Tile:", clickedTile); // 選択したタイルの情報を出力
+                //console.log("Selected Tile:", clickedTile); // 選択したタイルの情報を出力
                 drawTiles(); // タイルを再描画
             }
         } 
