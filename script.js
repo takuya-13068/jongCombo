@@ -128,8 +128,8 @@ function init() {
         e.preventDefault();
         const rect = canvas.getBoundingClientRect();
         let touch = e.touches[0];
-        touchStartX = touch.clientX - rect.left;
-        touchStartY = touch.clientY - rect.top;
+        const touchStartX = touch.clientX - rect.left;
+        const touchStartY = touch.clientY - rect.top;
         const   scaleWidth =  canvas.clientWidth / canvas.width,
                 scaleHeight =  canvas.clientHeight / canvas.height;
         const   x = Math.floor( touchStartX / scaleWidth),
@@ -146,11 +146,16 @@ function init() {
     
     canvas.addEventListener('touchmove', function(e) {
         e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
         let touch = e.touches[0];
-        touchNowX = touch.clientX - rect.left;
-        touchNowY = touch.clientY - rect.top;
+        const touchStartX = touch.clientX - rect.left;
+        const touchStartY = touch.clientY - rect.top;
+        const   scaleWidth =  canvas.clientWidth / canvas.width,
+                scaleHeight =  canvas.clientHeight / canvas.height;
+        const   x = Math.floor( touchStartX / scaleWidth),
+                y = Math.floor( touchStartY / scaleHeight);
     
-        let currentTile = getTileAtPosition(touchNowX, touchNowY);
+        let currentTile = getTileAtPosition(x, y);
         if (currentTile) {
             if (!firstSelectedTile) {
                 firstSelectedTile = currentTile;
