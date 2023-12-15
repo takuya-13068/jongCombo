@@ -123,7 +123,7 @@ function init() {
     loadAnimation();
     
     canvas.addEventListener('touchstart', function(e) {
-        //e.preventDefault();
+        e.preventDefault();
         let touch = e.touches[0];
         touchStartX = touch.clientX;
         touchStartY = touch.clientY;
@@ -131,7 +131,7 @@ function init() {
     }, { passive: false });
     
     canvas.addEventListener('touchmove', function(e) {
-        //e.preventDefault();
+        e.preventDefault();
         let touch = e.touches[0];
         touchEndX = touch.clientX;
         touchEndY = touch.clientY;
@@ -151,7 +151,7 @@ function init() {
     }, { passive: false });
     
     canvas.addEventListener('touchend', function(e) {
-        //e.preventDefault();
+        e.preventDefault();
         resetSelection();
     }, { passive: false });
 
