@@ -39,8 +39,8 @@ class Tile {
     draw(ctx2d, x, y) {
         ctx2d.drawImage(this.pic, x+4, y+4, TILES_SIZE.width-8, TILES_SIZE.height-8);
     }
-    
 }
+
 class MyImage{
     constructor (kind, x, y, size){
         this.kind = kind;
