@@ -25,7 +25,12 @@ const role = {"All Simples": 1, "Double-Run": 1, "Value Tiles": 1,
     };
 
 //麻雀牌
-const TILES_SIZE = {width: WIDTH/6, height: HEIGHT * 3 /5 / 5};
+const TILES_SIZE = {width: 100, height: HEIGHT * 3/5 /6, row:7, column: 6}; // 7*6
+//const TILES_SIZE = {width: WIDTH / 6, height: HEIGHT * 3 /5/5, row:5, column: 6}; // 6*5
+const widthMargin = GameArea.width - TILES_SIZE.width * TILES_SIZE.row;
+const heightMargin = GameArea.height - TILES_SIZE.height * TILES_SIZE.column;
+
+
 const FILE_NAME_MAP = {'manzu' : 'p_ms', 'pinzu' : 'p_ps', 'sozu' : 'p_ss', 'jihai' : 'p_ji'};
 //const tile_number = 9 + 9 + 7; //manzu, pinzu, jihai
 const tile_number = 9 + 9 + 3; //manzu, pinzu, 三元杯

@@ -7,18 +7,16 @@ function compareFunc(a, b) {
 
 
 function drawTiles() {
-    //ctx2d.clearRect(GameArea.x, GameArea.y, GameArea.width, GameArea.height); // キャンバスをクリア
-
     ctx2d.fillStyle = COLSET['green'];
     ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
 
     for (let tile of tiles) {
-        let i = tiles.indexOf(tile) % (GameArea.width / TILES_SIZE.width);
-        let j = Math.floor(tiles.indexOf(tile) / (GameArea.width / TILES_SIZE.width));
+        let i = tiles.indexOf(tile) % parseInt(GameArea.width / TILES_SIZE.width);
+        let j = Math.floor(tiles.indexOf(tile) / parseInt(GameArea.width / TILES_SIZE.width));
         let tileX = parseInt(GameArea.x + TILES_SIZE.width * i);
         let tileY = parseInt(GameArea.y + TILES_SIZE.height * j);
         
-        tile.draw(ctx2d, tileX, tileY); // Tileクラスのdrawメソッドを使ってタイルを描画
+        tile.draw(ctx2d, tileX + widthMargin/2, tileY + heightMargin/2); // Tileクラスのdrawメソッドを使ってタイルを描画
 
         if (tile === firstSelectedTile || tile === secondSelectedTile || tile === thirdSelectedTile) {
             if(reachMode) ctx2d.fillStyle = 'rgba(195, 60, 60, 0.5)';
@@ -31,10 +29,13 @@ function drawTiles() {
 function createField() {
     tiles = [];
     imagesLoaded = 0;
-    totalTiles = (GameArea.width / TILES_SIZE.width) * (GameArea.height / TILES_SIZE.height);
+    row = parseInt((GameArea.width / TILES_SIZE.width));
+    column = parseInt((GameArea.height / TILES_SIZE.height))
+    totalTiles = row * column;
+    console.log(totalTiles);
 
-    for (let i = 0; i < GameArea.width / TILES_SIZE.width; i++) {
-        for (let j = 0; j < GameArea.height / TILES_SIZE.height; j++) {
+    for (let i = 0; i < row; i++) {
+        for (let j = 0; j < column; j++) {
             let newtile = CreateTile();
             tiles.push(newtile);
 
