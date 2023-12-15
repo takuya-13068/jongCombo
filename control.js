@@ -21,7 +21,8 @@ function drawTiles() {
         tile.draw(ctx2d, tileX, tileY); // Tileクラスのdrawメソッドを使ってタイルを描画
 
         if (tile === firstSelectedTile || tile === secondSelectedTile || tile === thirdSelectedTile) {
-            ctx2d.fillStyle = 'rgba(135, 206, 235, 0.5)';
+            if(reachMode) ctx2d.fillStyle = 'rgba(195, 60, 60, 0.5)';
+            else ctx2d.fillStyle = 'rgba(135, 206, 235, 0.5)';
             ctx2d.fillRect(tileX, tileY, TILES_SIZE.width, TILES_SIZE.height);
         }
     }
@@ -210,50 +211,6 @@ function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
 
 }
 
-function dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex) {
-    let columnsToDrop = [firstTileIndex % (GameArea.width / TILES_SIZE.width),
-                         secondTileIndex % (GameArea.width / TILES_SIZE.width),
-                         thirdTileIndex % (GameArea.width / TILES_SIZE.width)];
-
-    console.log(columnsToDrop);
-    // 列ごとにタイルを下に移動
-    columnsToDrop.forEach(columnIndex => {
-        // その列のタイルを上から順に処理
-        for (let j = 0; j < GameArea.height / TILES_SIZE.height; j++) {
-            let tileIndex = columnIndex + j * (GameArea.width / TILES_SIZE.width);
-            let tile = tiles.find((_, index) => index === tileIndex);
-
-            if (tile) {
-                // タイルを1つ下に移動
-                let newJ = j + 1;
-                if (newJ < GameArea.height / TILES_SIZE.height) {
-                    tile.x = parseInt(GameArea.x + TILES_SIZE.width * columnIndex);
-                    tile.y = parseInt(GameArea.y + TILES_SIZE.height * newJ);
-                } else {
-                    // 最上位のタイルに新しいタイルを追加
-                    let newTile = CreateTile();
-                    newTile.x = parseInt(GameArea.x + TILES_SIZE.width * columnIndex);
-                    newTile.y = parseInt(GameArea.y + TILES_SIZE.height * j);
-                    tiles.push(newTile);
-                }
-            }
-        }
-    });
-}
-
-
-
-function addNewTiles(columnsToAdd) {
-    columnsToAdd.forEach(columnIndex => {
-        for (let j = 0; j < 3; j++) { // 空いた3マス分のタイルを追加
-            let newtile = CreateTile();
-            newtile.x = parseInt(GameArea.x + TILES_SIZE.width * columnIndex);
-            newtile.y = parseInt(GameArea.y + TILES_SIZE.height * j);
-            tiles.push(newtile);
-        }
-    });
-}
-
 function moveTileDown(tileIndex) {
     if (tileIndex < 6) {
         // 上のタイルがない場合は、新しいタイルを生成
@@ -319,6 +276,7 @@ function updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile){
         gameData.score += 100 * (2 ** (combo - 1));
         combostart = performance.now() - initialPfnw;
         comboLimitTime = 5.0;
+        if(combo === 4) reachMode = true;
     }
 
     // calculate role point
