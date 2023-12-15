@@ -18,7 +18,9 @@ function drawTiles() {
         let tileX = parseInt(GameArea.x + TILES_SIZE.width * i);
         let tileY = parseInt(GameArea.y + TILES_SIZE.height * j);
         
-        tile.draw(ctx2d, tileX, tileY); // Tileクラスのdrawメソッドを使ってタイルを描画
+        tile.towardX = tileX;
+        tile.towardY = tileY;
+        tile.draw(); // Tileクラスのdrawメソッドを使ってタイルを描画
 
         if (tile === firstSelectedTile || tile === secondSelectedTile || tile === thirdSelectedTile) {
             if(reachMode) ctx2d.fillStyle = 'rgba(195, 60, 60, 0.5)';
@@ -31,23 +33,22 @@ function drawTiles() {
 function createField() {
     tiles = [];
     imagesLoaded = 0;
-    totalTiles = (GameArea.width / TILES_SIZE.width) * (GameArea.height / TILES_SIZE.height);
+    totalTiles = TILES_VERTICAL*TILES_HORIZONTAL;
 
-    for (let i = 0; i < GameArea.width / TILES_SIZE.width; i++) {
-        for (let j = 0; j < GameArea.height / TILES_SIZE.height; j++) {
-            let newtile = CreateTile();
-            tiles.push(newtile);
+    for (var i = 0; i < totalTiles; i++){
+        let pos = getTilePosFromIndex(i);
+        let newtile = CreateTile(pos[0], pos[1] - TILES_SIZE.height);
+        tiles[i] = newtile;
 
-            // 画像の読み込みを設定
-            newtile.pic.onload = function() {
-                imagesLoaded++;
-                if (imagesLoaded === totalTiles) {
-                    // すべての画像が読み込まれたら描画
-                    console.log("loaded alldata.")
-                    drawTiles();
-                }
-            };
-        }
+        // 画像の読み込みを設定
+        newtile.pic.onload = function() {
+            imagesLoaded++;
+            if (imagesLoaded === totalTiles) {
+                // すべての画像が読み込まれたら描画
+                console.log("loaded alldata.")
+                drawTiles();
+            }
+        };
     }
 }
 
@@ -101,18 +102,18 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-function CreateTile(){
+function CreateTile(x, y){
     let number = getRandomInt(tile_number);
 
     try{
         if(number < 9) {
-            return new Tile("manzu", number + 1, 0,0,30);
+            return new Tile("manzu", number + 1, x, y);
         }
         else if (number < 18) {
-            return new Tile("pinzu", number - 8, 0,0,30);
+            return new Tile("pinzu", number - 8, x, y);
         }
         else if (number < 25) {
-            return new Tile("jihai", number - 17, 0,0,30);
+            return new Tile("jihai", number - 17, x, y);
         }
         else throw new Error("選択された数値が不正です。");
     } catch (e){
@@ -211,10 +212,18 @@ function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
 
 }
 
+function getTilePosFromIndex(tileIndex){
+    var pos = [0, 0];
+    pos[0] = tileIndex % TILES_HORIZONTAL * TILES_SIZE.width;
+    pos[1] = GameArea.y + (tileIndex - tileIndex % TILES_HORIZONTAL) / TILES_VERTICAL;
+    return pos;
+}
+
 function moveTileDown(tileIndex) {
     if (tileIndex < 6) {
         // 上のタイルがない場合は、新しいタイルを生成
-        tiles[tileIndex] = CreateTile();
+        var pos = getTilePosFromIndex(tileIndex);
+        tiles[tileIndex] = CreateTile(pos[0], pos[1] - TILES_SIZE.height);
     } else {
         // 上のタイルを現在の位置に移動
         tiles[tileIndex] = tiles[tileIndex - 6];
