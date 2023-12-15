@@ -244,7 +244,11 @@ function updateScore(){
     else if(reachMode){
         try{
             removedTiles.push(firstSelectedTile, secondSelectedTile);
-            displayRemovedTiles();
+            let displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
+            let displayY = GameArea.y - 100; // GameAreaの少し上
+            gameObjList.push(new GroupTile(firstSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
+            displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
+            gameObjList.push(new GroupTile(secondSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
             calculateRole();
 
             // 役のエフェクトを入れてください
@@ -295,7 +299,7 @@ function calculateRole(){
                 val = false;
                 break
             }
-        } if(val) role_set.push("ALL Simples");
+        } if(val) role_set.push("All Simples");
     }
 
     //一盃口、二盃口
@@ -315,6 +319,7 @@ function calculateRole(){
     // 小三元、大三元
 
     // 名称から飜計算
+    console.log(role_set);
     for (const name of role_set){
         console.log(name);
         han += role[name];
