@@ -32,6 +32,9 @@ let touchStartY = 0;
 let touchEndX = 0;
 let touchEndY = 0;
 
+let lastTouchX = 0;
+let lastTouchY = 0;
+
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(e){ ///キー入力イベントを登録
     window.addEventListener("keydown", function(e){
