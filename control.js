@@ -298,10 +298,12 @@ function removeSelectedTiles() {
     let selectedTileIndices = [tiles.indexOf(firstSelectedTile), tiles.indexOf(secondSelectedTile), tiles.indexOf(thirdSelectedTile)];
     selectedTileIndices = selectedTileIndices.sort(compareFunc);
 
-    removedTiles.push(firstSelectedTile, secondSelectedTile, thirdSelectedTile);
-
     // 重複を排除
     selectedTileIndices = [...new Set(selectedTileIndices)];
+
+    let selectedTiles = [firstSelectedTile, secondSelectedTile, thirdSelectedTile];
+    selectedTiles.sort((a, b) => a.value - b.value);
+    removedTiles.push(...selectedTiles);
 
     // タイルを削除し、必要なタイルを移動
     selectedTileIndices.forEach(tileIndex => {
