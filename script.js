@@ -33,12 +33,13 @@ let touchEndX = 0;
 let touchEndY = 0;
 
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
-window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベントを登録
+window.addEventListener('DOMContentLoaded', function(e){ ///キー入力イベントを登録
     window.addEventListener("keydown", function(e){
         if (e.key=="ArrowUp" || e.key=="ArrowDown" || e.key=="ArrowLeft" || e.key=="ArrowRight"){ //押されたのが方向キーだったら
             e.preventDefault();//スクロールを防ぐ
         }
     });
+    e.preventDefault();
 });
 
 
@@ -124,10 +125,11 @@ function init() {
 
     
     canvas.addEventListener('touchstart', function(e) {
-        //e.preventDefault();
+        e.preventDefault();
         let touch = e.touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
+        const rect = canvas.getBoundingClientRect();
+        touchStartX = touch.clientX - rect.left;
+        touchStartY = touch.clientY - rect.top;
         firstSelectedTile = getTileAtPosition(touchStartX, touchStartY);
     }, { passive: false });
     
