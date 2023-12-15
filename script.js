@@ -139,7 +139,7 @@ function init() {
         } else if(mode === 2){
             checkClickOfResultObj(x, y);
         } else if(mode === 1){
-            firstSelectedTile = getTileAtPosition(touchStartX, touchStartY);
+            firstSelectedTile = getTileAtPosition(x, y);
         }
 
     }, { passive: false });
