@@ -1,6 +1,3 @@
-
-
-
 function compareFunc(a, b) {
     return a - b;
 }
@@ -24,7 +21,7 @@ function drawTiles() {
         if (tile === firstSelectedTile || tile === secondSelectedTile || tile === thirdSelectedTile) {
             if(reachMode) ctx2d.fillStyle = 'rgba(195, 60, 60, 0.5)';
             else ctx2d.fillStyle = 'rgba(135, 206, 235, 0.5)';
-            ctx2d.fillRect(tileX, tileY, TILES_SIZE.width, TILES_SIZE.height);
+            ctx2d.fillRect(tileX + widthMargin/2, tileY + heightMargin/2, TILES_SIZE.width, TILES_SIZE.height);
         }
     }
 }
@@ -170,8 +167,8 @@ function ValidateSecondTile(selectedTile, newTile, reachMode) {
 function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
     let newTileIndex = tiles.indexOf(newTile);
     
-    let newTileRow = Math.floor(newTileIndex / (GameArea.width / TILES_SIZE.width));
-    let newTileCol = newTileIndex % (GameArea.width / TILES_SIZE.width);
+    let newTileRow = Math.floor(newTileIndex / parseInt(GameArea.width / TILES_SIZE.width));
+    let newTileCol = newTileIndex % parseInt(GameArea.width / TILES_SIZE.width);
 
     // 3番目のタイルが一つ目または二つ目のタイルの周囲のタイルか確認
     let firstTileIndex = tiles.indexOf(firstSelectedTile);
