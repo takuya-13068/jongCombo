@@ -239,34 +239,32 @@ function updateScore(){
         gameData.score += 100 * (2 ** (combo - 1));
         combostart = performance.now() - initialPfnw;
         comboLimitTime = COMBO_MAX_TIME;
-        if(combo === 4) reachMode = true;
+        if(combo === 4) {
+            reachMode = true;
+            gameObjList.push(new MyRichImage('reach', 'center', HEIGHT/2-50, 100, 1, 1000, 0));
+        }
     }
 
     // calculate role point
     else if(reachMode){
-        try{
-            removedTiles.push(firstSelectedTile, secondSelectedTile);
-            let displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
-            let displayY = GameArea.y - 100; // GameAreaの少し上
-            gameObjList.push(new GroupTile(firstSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
-            displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
-            gameObjList.push(new GroupTile(secondSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
+        // 役成立
+        removedTiles.push(firstSelectedTile, secondSelectedTile);
+        let displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
+        let displayY = GameArea.y - 100; // GameAreaの少し上
+        gameObjList.push(new GroupTile(firstSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
+        displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
+        gameObjList.push(new GroupTile(secondSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
 
-            calculateRole();
+        calculateRole();
 
-            // 役のエフェクトを入れてください
-
-            // reset
-            combo = 0;
-            removedTiles = []; // Reset removedtile
-            reachMode = false;
-            gameObjList = gameObjList.filter(function(v){
-                return v.constructor.name != 'GroupTile';
-            })
-            resetSelection();
-        } catch (e){
-            console.error("ERROR: " , e.message);
-        }
+        // reset
+        combo = 0;
+        removedTiles = []; // Reset removedtile
+        reachMode = false;
+        gameObjList = gameObjList.filter(function(v){
+            return v.constructor.name != 'GroupTile';
+        })
+        resetSelection();
     }
 }
 
@@ -358,4 +356,11 @@ function calculateRole(){
     console.log(han);
     if(han > 13) gameData.score += 32000;
     else gameData.score+= role_score[han];
+
+    // エフェクトここから
+    console.log(role_set);
+    for(var i = 0; i < role_set.length; i++){
+        console.log(role_set[i], role[role_set[i]]);
+        gameObjList.push(new MyRichImage(role[role_set[i]].fileName, WIDTH-200, 50 * i + 250, 40, 2, 1000, i * 500));
+    }
 }

@@ -14,7 +14,7 @@ const titleLogoHeight = 280;
 const tileEffectSize = 120;
 const ScoreBoardLoop = 10;
 const ComboGaugeLoop = 10;
-const COMBO_MAX_TIME = 5;
+const COMBO_MAX_TIME = 500;
 
 const score = [100,200,400,800];
 
@@ -26,9 +26,9 @@ const score = [100,200,400,800];
 役満: 大三元, 四暗刻
 */
 const role = {"Reach": {han:1, fileName:'reach'}, "All Simples": {han:1, fileName:'all_simples'}, "Double-Run": {han:1, fileName:'double_run'}, "Value Tiles": {han:1, fileName:'value_tiles'}, 
-        "Three Triples": {han:2}, "Full straight": {han:2}, "Little Dragons": {han:2}, 
-        "Half Flush": {han:3}, "2 Double Runs": {han:3}, "Full Flush": {han:6}, 
-        "Big Dragons": {han:13}, "Four Triples": {han:13}
+        "Three Triples": {han:2, fileName:'reach'}, "Full straight": {han:2, fileName:'reach'}, "Little Dragons": {han:2, fileName:'reach'}, 
+        "Half Flush": {han:3, fileName:'reach'}, "2 Double Runs": {han:3, fileName:'reach'}, "Full Flush": {han:6, fileName:'reach'}, 
+        "Big Dragons": {han:13, fileName:'reach'}, "Four Triples": {han:13, fileName:'reach'}
     };
 const role_score = {1:1000, 2:2000, 3:4000, 4:8000, 5:8000, 6:12000, 7:12000, 8:16000, 9:16000, 10:16000, 11:24000, 12:24000, 13:32000};
 
@@ -187,9 +187,9 @@ class ScoreBoard extends MyImage{
     constructor (x, y, size){
         super('1', x, y, size);
         this.score = gameData.score;
-        // 常に横幅は4文字分確保しておく
-        this.x-=this.w * 1.5;
-        this.w*=4;
+        // 常に横幅は5文字分確保しておく
+        this.x-=this.w * 2.5;
+        this.w*=5;
         this.drawScale = 1;
     }
     freshScore(){
@@ -205,7 +205,7 @@ class ScoreBoard extends MyImage{
     }
     draw(){
         this.freshScore();
-        var drawScore = Math.round(Math.min(9999, Math.max(0, this.score)));
+        var drawScore = Math.round(Math.min(99999, Math.max(0, this.score)));
         for (var i = 0; i < String(drawScore).length; i++){
             ctx2d.drawImage(imageFiles[String(drawScore)[i]], (this.x + this.w / 2) + i * this.w * this.drawScale / 4 - String(drawScore).length * this.w * this.drawScale / 8, this.y + (1 - this.drawScale) * this.h / 2, this.w * this.drawScale / 4, this.h * this.drawScale);
         }
@@ -232,6 +232,23 @@ class MyAnimation extends MyImage{
     }
     isOver(){
         return (t > this.initialT + this.maxT);
+    }
+}
+
+class MyRichImage extends MyImage{
+    constructor (kind, x, y, size, animationKind, time, timeOffset){
+        super(kind, x, y, size);
+        this.animationKind = animationKind;
+        this.time = time;
+        this.initialTime = performance.now() + timeOffset;
+    }
+    draw(){
+        if(this.animationKind == 2){
+            
+        }
+        if(performance.now() > this.initialTime && performance.now() - this.initialTime < this.time){
+            super.draw();
+        }
     }
 }
 

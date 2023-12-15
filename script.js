@@ -128,6 +128,7 @@ function setMode(nextMode){
         // リザルト画面に遷移するとき
         resultObjList.push(new Button('retry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2 - menuButtonHeight * 1.2, menuButtonHeight));
         resultObjList.push(new Button('entry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
+        resultObjList.push(new ScoreBoard('center', 230, HEIGHT*0.2));
         mainBGM.stop();
     }
     mode = nextMode;
@@ -144,7 +145,7 @@ function tick() {
         drawTitle();
     } else if (mode === 1) {
         if(comboLimitTime > 0){ //combo 残り時間の更新
-            comboLimitTime = Math.max(5.0 - (t - combostart) /1000, 0);
+            comboLimitTime = Math.max(COMBO_MAX_TIME - (t - combostart) /1000, 0);
             if(comboLimitTime <= 0){//combo終了
                 combo = 0;
                 removedTiles = []; // Reset removedtile
