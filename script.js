@@ -126,10 +126,20 @@ function init() {
     
     canvas.addEventListener('touchstart', function(e) {
         e.preventDefault();
-        let touch = e.touches[0];
         const rect = canvas.getBoundingClientRect();
+        let touch = e.touches[0];
         touchStartX = touch.clientX - rect.left;
         touchStartY = touch.clientY - rect.top;
+        const   scaleWidth =  canvas.clientWidth / canvas.width,
+                scaleHeight =  canvas.clientHeight / canvas.height;
+        const   x = Math.floor( touchStartX / scaleWidth),
+                y = Math.floor( touchStartY / scaleHeight);
+        if (mode === 0){
+            checkClickOfTitleObj(x, y);
+        } else if(mode === 2){
+            checkClickOfResultObj(x, y);
+        } 
+
         firstSelectedTile = getTileAtPosition(touchStartX, touchStartY);
     }, { passive: false });
     
