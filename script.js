@@ -50,7 +50,10 @@ function drawResult(){//リザルト画面の描画
 }
 
 function drawGame(){//ゲーム画面の描画
-//    ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx2d.fillStyle = COLSET['green'];
+    ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
+    drawTiles();
     for(i = 0; i < gameObjList.length; i++){
         gameObjList[i].draw();
     }
@@ -81,10 +84,9 @@ function startGame() {
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
     gameData.gameStartTime = performance.now(); // ゲーム開始時間を記録
     gameObjList = [];
-    gameObjList.push(new Timer(WIDTH*0.68, 30, HEIGHT*0.05));
+    gameObjList.push(new Timer(WIDTH*0.85, 30, HEIGHT*0.05));
+    gameObjList.push(new ScoreBoard('center', 100, HEIGHT*0.1));
 }
-
-
 
 function init() {
     canvas = document.getElementById("myCanvas");
@@ -196,7 +198,6 @@ function tick() {
     } else if (mode === 0) {
         drawTitle();
     } else if (mode === 1) {
-        drawTiles();
         if (thirdSelectedTile != null) {
             let firstTileIndex = tiles.indexOf(firstSelectedTile);
             let secondTileIndex = tiles.indexOf(secondSelectedTile);

@@ -8,6 +8,7 @@ function drawTiles() {
 
     ctx2d.fillStyle = COLSET['green'];
     ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
+
     for (let tile of tiles) {
         let i = tiles.indexOf(tile) % (GameArea.width / TILES_SIZE.width);
         let j = Math.floor(tiles.indexOf(tile) / (GameArea.width / TILES_SIZE.width));
