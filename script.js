@@ -6,7 +6,6 @@ let initialPfnw = performance.now(); // ロード時の起動時間をセット
 let fieldCreated = false; // createFieldが実行されたかを追跡
 let imageLoaded = false; // 画像が読み込まれたかを追跡するための変数
 let loadedImgCnt = 0; // 画像が読み込まれた数
-let inin = new Image(); // グローバルスコープで画像を定義
 let selectedTile = null; // 選択されたタイルを追跡する変数
 let firstSelectedTile = null; // 最初に選択されたタイルを追跡する変数
 let secondSelectedTile = null; // 2番目に選択されたタイルを追跡する変数
@@ -19,6 +18,13 @@ let imageFiles = {
 let titleObjList = []; // タイトル画面に描画するオブジェクトをリスト形式で保存
 let resultObjList = []; // リザルト画面に描画するオブジェクトをリスト形式で保存 
 let gameObjList = []; // ゲーム画面で描画するオブジェクトをリスト形式で保存
+let tiles = []; // ここにタイルの情報を格納する
+let imagesLoaded = 0; // 読み込まれた画像の数
+let totalTiles; //title total
+let combo = 0;
+let comboLimitTime = 0; // comboが持続するタイマー
+let combostart;
+let reachMode = false;
 
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベントを登録
@@ -169,8 +175,7 @@ function init() {
     tick();
 }
 
-function setMode(nextMode){ // ❗modeが遷移するときに何らかの処理をやりたいことが多いから、mode=XXみたいに直接modeの変数の値変えるんじゃなくて、setMode(XX)を呼んで変える方式に統一してくれると助かるにちゃ
-    // モードの切り替え　モードの切替時には必ずこれを呼ぶ（直接変数modeを書き換えない）
+function setMode(nextMode){ 
     if(nextMode === -1){
         loadTileImages();
     }else if(nextMode == 0){
@@ -199,11 +204,17 @@ function tick() {
     } else if (mode === 0) {
         drawTitle();
     } else if (mode === 1) {
+        if(comboLimitTime > 0){ //combo 残り時間の更新
+            comboLimitTime = Math.max(5.0 - (t - combostart) /1000, 0);
+            if(comboLimitTime <= 0){//combo終了
+                combo = 0;
+                removedTiles = []; // Reset removedtile
+            }
+        }
+        if (combo === 4){ //雀頭選択立直モード
+            
+        }
         if (thirdSelectedTile != null) {
-            let firstTileIndex = tiles.indexOf(firstSelectedTile);
-            let secondTileIndex = tiles.indexOf(secondSelectedTile);
-            let thirdTileIndex = tiles.indexOf(thirdSelectedTile);
-
             removeSelectedTiles();
             displayRemovedTiles();
             resetSelection();
@@ -212,7 +223,7 @@ function tick() {
         displayRemovedTiles();
         if (performance.now() - gameData.gameStartTime > TIME_MAX * 1000) {
             setMode(2); // リザルト画面へ
-        }    
+        }
     } else if (mode === 2) {
         drawResult();
     }
