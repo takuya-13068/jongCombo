@@ -351,7 +351,7 @@ function calculateRole(){
     console.log(role_set);
     for (const name of role_set){
         console.log(name);
-        han += role[name];
+        han += role[name].han;
     } 
     console.log(han);
     if(han > 13) gameData.score += 32000;

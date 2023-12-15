@@ -103,7 +103,7 @@ function init() {
     touchStartEvent();
     touchMoveEvent();
     touchEndEvent();
-    clikcEvent();
+    clickEvent();
 
     setMode(-1);
     tick();

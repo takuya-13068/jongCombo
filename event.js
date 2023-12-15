@@ -28,6 +28,7 @@ function touchStartEvent(){
         } else if(mode === 2){
             checkClickOfResultObj(x, y);
         } else if(mode === 1){
+            checkClickOfGameObj(x, y);
             firstSelectedTile = getTileAtPosition(x, y);
         }
 
@@ -68,7 +69,8 @@ function touchEndEvent(){
     }, { passive: false });
 }
 
-function clikcEvent(){
+function clickEvent(){
+    // ❗デバッグ用で残してるだけ　内容はtouchと被りあり❗
     canvas.addEventListener('click', function(event) {
         // クリックされた座標を取得
         const rect = canvas.getBoundingClientRect();
@@ -78,14 +80,15 @@ function clikcEvent(){
                 scaleHeight =  canvas.clientHeight / canvas.height;
         const   x = Math.floor( viewX / scaleWidth),
                 y = Math.floor( viewY / scaleHeight);
-        if (mode === 0){
+
+        if (mode == 0){
             checkClickOfTitleObj(x, y);
-        } else if(mode === 2){
+        } else if(mode == 2){
             checkClickOfResultObj(x, y);
-        } 
-        else if (mode === 1) {
+        } else if (mode == 1) {
             let clickedTile = null;
             let canSelect = true; // タイルが選択可能かどうかのフラグ
+            checkClickOfGameObj (x, y);
         
             for (let tile of tiles) { //選択されたタイルの情報をとる
                 let i = tiles.indexOf(tile) % parseInt(GameArea.width / TILES_SIZE.width);
