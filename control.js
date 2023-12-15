@@ -18,8 +18,8 @@ function drawTiles() {
         
         tile.draw(ctx2d, tileX + widthMargin/2, tileY + heightMargin/2); // Tileクラスのdrawメソッドを使ってタイルを描画
 
-        tile.towardX = tileX;
-        tile.towardY = tileY;
+        tile.towardX = tileX + widthMargin/2;
+        tile.towardY = tileY + heightMargin/2;
         tile.draw(); // Tileクラスのdrawメソッドを使ってタイルを描画
 
         if (tile === firstSelectedTile || tile === secondSelectedTile || tile === thirdSelectedTile) {
@@ -231,9 +231,9 @@ function removeSelectedTiles() {
 
     // タイルを削除し、必要なタイルを移動
     selectedTileIndices.forEach(tileIndex => {
-        while (tileIndex >= 6) {
+        while (tileIndex >= TILES_SIZE.row) {
             moveTileDown(tileIndex);
-            tileIndex -= 6;
+            tileIndex -= TILES_SIZE.row;
         }
         // 最上部のタイルを新規生成
         moveTileDown(tileIndex);
@@ -263,9 +263,10 @@ function resetSelection() {
 }
 
 function moveTileDown(tileIndex) {
-    if (tileIndex < 6) {
+    if (tileIndex < TILES_SIZE.row) {
         // 上のタイルがない場合は、新しいタイルを生成
-        tiles[tileIndex] = CreateTile();
+        let pos = getTilePosFromIndex(tileIndex);
+        tiles[tileIndex] = CreateTile(pos[0], pos[1]);
     } else {
         // 上のタイルを現在の位置に移動
         tiles[tileIndex] = tiles[tileIndex - 6];
