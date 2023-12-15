@@ -68,7 +68,15 @@ function drawResult(){//リザルト画面の描画
         resultObjList[i].draw();
     }
 }
-
+function checkClickOfGameObj(x, y){
+    for(i = 0; i < gameObjList.length; i++){
+        if(gameObjList[i].constructor.name == 'Button'){
+            if(gameObjList[i].checkClicked(x, y)){
+                gameObjList[i].clicked();
+            }
+        }
+    }
+}
 function startGame() {
     createField();
     fieldCreated = true;
@@ -76,6 +84,7 @@ function startGame() {
     gameData.gameStartTime = performance.now(); // ゲーム開始時間を記録
     gameData.score = 0;
     gameObjList = [];
+    gameObjList.push(new Button('backToHome', 30, 30, 70));
     gameObjList.push(new Timer(WIDTH*0.85, 30, HEIGHT*0.05));
     gameObjList.push(new ScoreBoard('center', 100, HEIGHT*0.1));
     gameObjList.push(new ComboGauge('center', 200, HEIGHT*0.1));
@@ -91,7 +100,6 @@ function init() {
     loadText();
     loadAnimation();
 
-    
     touchStartEvent();
     touchMoveEvent();
     touchEndEvent();
