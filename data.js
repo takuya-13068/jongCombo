@@ -26,8 +26,8 @@ const role = {"All Simples": 1, "Double-Run": 1, "Value Tiles": 1,
     };
 
 //麻雀牌
-//const TILES_SIZE = {width: 100, height: HEIGHT * 3/5 /6, row:7, column: 6}; // 7*6
-const TILES_SIZE = {width: WIDTH / 6, height: HEIGHT * 3 /5/5, row:6, column: 5}; // 6*5
+const TILES_SIZE = {width: 100, height: HEIGHT * 3/5 /6, row:7, column: 6}; // 7*6
+//const TILES_SIZE = {width: WIDTH / 6, height: HEIGHT * 3 /5/5, row:6, column: 5}; // 6*5
 const widthMargin = GameArea.width - TILES_SIZE.width * TILES_SIZE.row;
 const heightMargin = GameArea.height - TILES_SIZE.height * TILES_SIZE.column;
 const TILES_HORIZONTAL = Math.floor(GameArea.width / TILES_SIZE.width);

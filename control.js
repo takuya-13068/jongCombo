@@ -135,10 +135,10 @@ function ValidateSecondTile(selectedTile, newTile, reachMode) {
     let firstTileIndex = tiles.indexOf(firstSelectedTile);
     let newTileIndex = tiles.indexOf(newTile);
     
-    let firstTileRow = Math.floor(firstTileIndex / (GameArea.width / TILES_SIZE.width));
-    let firstTileCol = firstTileIndex % (GameArea.width / TILES_SIZE.width);
-    let newTileRow = Math.floor(newTileIndex / (GameArea.width / TILES_SIZE.width));
-    let newTileCol = newTileIndex % (GameArea.width / TILES_SIZE.width);
+    let firstTileRow = Math.floor(firstTileIndex / parseInt(GameArea.width / TILES_SIZE.width));
+    let firstTileCol = firstTileIndex % parseInt(GameArea.width / TILES_SIZE.width);
+    let newTileRow = Math.floor(newTileIndex / parseInt(GameArea.width / TILES_SIZE.width));
+    let newTileCol = newTileIndex % parseInt(GameArea.width / TILES_SIZE.width);
 
     // 隣接するタイルは行または列が最大1つの差であることを確認
     if(!(Math.abs(firstTileRow - newTileRow) <= 1 && Math.abs(firstTileCol - newTileCol) <= 1)) {
@@ -176,10 +176,10 @@ function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
     // 3番目のタイルが一つ目または二つ目のタイルの周囲のタイルか確認
     let firstTileIndex = tiles.indexOf(firstSelectedTile);
     let secondTileIndex = tiles.indexOf(secondSelectedTile);
-    let firstTileRow = Math.floor(firstTileIndex / (GameArea.width / TILES_SIZE.width));
-    let secondTileRow = Math.floor(secondTileIndex / (GameArea.width / TILES_SIZE.width));
-    let firstTileCol = firstTileIndex % (GameArea.width / TILES_SIZE.width);
-    let secondTileCol = secondTileIndex % (GameArea.width / TILES_SIZE.width);
+    let firstTileRow = Math.floor(firstTileIndex / parseInt(GameArea.width / TILES_SIZE.width));
+    let secondTileRow = Math.floor(secondTileIndex / parseInt(GameArea.width / TILES_SIZE.width));
+    let firstTileCol = firstTileIndex % parseInt(GameArea.width / TILES_SIZE.width);
+    let secondTileCol = secondTileIndex % parseInt(GameArea.width / TILES_SIZE.width);
 
     if (!(
         (Math.abs(newTileRow - firstTileRow) <= 1 && Math.abs(newTileCol - firstTileCol) <= 1) ||
@@ -277,7 +277,7 @@ function moveTileDown(tileIndex) {
         tiles[tileIndex] = CreateTile(pos[0], pos[1]);
     } else {
         // 上のタイルを現在の位置に移動
-        tiles[tileIndex] = tiles[tileIndex - 6];
+        tiles[tileIndex] = tiles[tileIndex - TILES_SIZE.row];
     }
 }
 
