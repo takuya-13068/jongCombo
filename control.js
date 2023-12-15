@@ -1,7 +1,14 @@
 let tiles = []; // ここにタイルの情報を格納する
 let imagesLoaded = 0; // 読み込まれた画像の数
+let totalTiles; //title total
+
 
 function drawTiles() {
+    //ctx2d.clearRect(GameArea.x, GameArea.y, GameArea.width, GameArea.height); // キャンバスをクリア
+
+    ctx2d.fillStyle = COLSET['green'];
+    ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
+
     for (let tile of tiles) {
         let i = tiles.indexOf(tile) % (GameArea.width / TILES_SIZE.width);
         let j = Math.floor(tiles.indexOf(tile) / (GameArea.width / TILES_SIZE.width));
@@ -20,7 +27,7 @@ function drawTiles() {
 function createField() {
     tiles = [];
     imagesLoaded = 0;
-    let totalTiles = (GameArea.width / TILES_SIZE.width) * (GameArea.height / TILES_SIZE.height);
+    totalTiles = (GameArea.width / TILES_SIZE.width) * (GameArea.height / TILES_SIZE.height);
 
     for (let i = 0; i < GameArea.width / TILES_SIZE.width; i++) {
         for (let j = 0; j < GameArea.height / TILES_SIZE.height; j++) {
@@ -70,13 +77,16 @@ function loadText(){
 
 function loadTileImages() {
     for (let kind in FILE_NAME_MAP) {
-        let maxTiles = kind === 'jihai' ? 7 : 9; // 'jihai' の場合は7まで、それ以外は9まで
+        let maxTiles = kind === 'jihai' ? 7 : 9;
         for (let i = 1; i <= maxTiles; i++) {
             let imageName = FILE_NAME_MAP[kind] + i + '_1';
             imageFiles.tiles[imageName] = new Image();
             imageFiles.tiles[imageName].src = './assets/img/' + imageName + '.gif';
             imageFiles.tiles[imageName].onload = function() {
                 loadedImgCnt++;
+                if (loadedImgCnt === totalTiles) {
+                    setMode(0); // すべての画像が読み込まれたら、モードを変更
+                }
             };
         }
     }
@@ -288,6 +298,8 @@ function removeSelectedTiles() {
     let selectedTileIndices = [tiles.indexOf(firstSelectedTile), tiles.indexOf(secondSelectedTile), tiles.indexOf(thirdSelectedTile)];
     selectedTileIndices = selectedTileIndices.sort(compareFunc);
 
+    removedTiles.push(firstSelectedTile, secondSelectedTile, thirdSelectedTile);
+
     // 重複を排除
     selectedTileIndices = [...new Set(selectedTileIndices)];
 
@@ -330,13 +342,11 @@ function removeSelectedTiles() {
 
 
 function displayRemovedTiles() {
-    // 上部に表示するロジック
     let displayAreaHeight = HEIGHT * 1 / 10; // 上部の表示エリアの高さ
-    ctx2d.clearRect(0, 0, WIDTH, displayAreaHeight); // 上部エリアのクリア
 
     removedTiles.forEach((tile, index) => {
-        let displayX = (WIDTH / removedTiles.length) * index;
-        let displayY = 0;
+        let displayX = index * TILES_SIZE.width;
+        let displayY = GameArea.y - displayAreaHeight - 10; // GameAreaの少し上
         ctx2d.drawImage(tile.pic, displayX, displayY, TILES_SIZE.width / 2, TILES_SIZE.height / 2); // サイズを半分にして表示
     });
 }

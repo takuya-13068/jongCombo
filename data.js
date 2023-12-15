@@ -2,7 +2,8 @@ const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
 const COLSET = {green: '#116D4E', brown:'#4E3636'};
-const TIME_MAX = 15; // ゲーム時間（秒）
+const TIME_MAX = 100; // ゲーム時間（秒）
+
 const buttonList = ['start', 'entry', 'retry']; // img内に'button_XXX' のファイルを用意する
 const otherImagesList = ['logo', 'howto']; // img内に'XX.webp'のファイルを用意する
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
@@ -33,10 +34,6 @@ class Tile {
         this.value = value;
         let imageName = FILE_NAME_MAP[this.kind] + String(this.value) + '_1';
         this.pic = imageFiles.tiles[imageName];
-        /*
-        this.pic = new Image(); // ❗これだとタイルをnewする度にファイルを読みにいっちゃうから、modeが-1のときにまとめて画像ファイルをimageFiles.tilesの中に読み込んで、描画するときはimageFiles.tilesの中身経由でファイルを読むようにしてくれい　imageFiles.buttonで全く同じ処理やってるから参考に
-        this.pic.src = './assets/img/' + FILE_NAME_MAP[this.kind] + String(this.value) + '_1.gif';
-        */
     } 
 
     draw(ctx2d, x, y) {

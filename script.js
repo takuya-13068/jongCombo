@@ -95,7 +95,6 @@ function init() {
     loadButtons();
     loadOtherImages();
     loadText();
-    loadTileImages();
     canvas.addEventListener('click', function(event) {
         // クリックされた座標を取得
         const rect = canvas.getBoundingClientRect();
@@ -126,7 +125,15 @@ function init() {
             }
         
             if (clickedTile) { // 選択できるか条件
-                if (!firstSelectedTile) {
+
+                if (clickedTile === firstSelectedTile) {
+                    firstSelectedTile = null;
+                } else if (clickedTile === secondSelectedTile) {
+                    secondSelectedTile = null;
+                } else if (clickedTile === thirdSelectedTile) {
+                    thirdSelectedTile = null;
+                } 
+                else if (!firstSelectedTile) {
                     firstSelectedTile = clickedTile;
                 } else if (!secondSelectedTile && ValidateSecondTile(firstSelectedTile, clickedTile)) {
                     secondSelectedTile = clickedTile;
@@ -163,7 +170,9 @@ function init() {
 
 function setMode(nextMode){ // ❗modeが遷移するときに何らかの処理をやりたいことが多いから、mode=XXみたいに直接modeの変数の値変えるんじゃなくて、setMode(XX)を呼んで変える方式に統一してくれると助かるにちゃ
     // モードの切り替え　モードの切替時には必ずこれを呼ぶ（直接変数modeを書き換えない）
-    if(nextMode == 0){
+    if(nextMode === -1){
+        loadTileImages();
+    }else if(nextMode == 0){
         // ゲーム開始画面へ遷移するとき
         titleObjList = [];
         titleObjList.push(new MyImage('logo', 'center', HEIGHT*0.2, titleLogoHeight));
@@ -196,12 +205,10 @@ function tick() {
 
             removeSelectedTiles();
             displayRemovedTiles();
-            //dropTiles(); // dropTiles関数の呼び出し
-            //addNewTiles();
             resetSelection();
-            console.log("oisu");
         }
         drawGame();
+        displayRemovedTiles();
         if (performance.now() - gameData.gameStartTime > TIME_MAX * 1000) {
             setMode(2); // リザルト画面へ
         }    
