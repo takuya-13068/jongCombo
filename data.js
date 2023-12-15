@@ -2,7 +2,7 @@ const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
 const COLSET = {green: '#116D4E', brown:'#4E3636'};
-const TIME_MAX = 5; // ゲーム時間（秒）
+const TIME_MAX = 15; // ゲーム時間（秒）
 const buttonList = ['start', 'entry', 'retry']; // img内に'button_XXX' のファイルを用意する
 const otherImagesList = ['logo', 'howto']; // img内に'XX.webp'のファイルを用意する
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
@@ -40,7 +40,7 @@ class Tile {
     } 
 
     draw(ctx2d, x, y) {
-        ctx2d.drawImage(this.pic, x, y, TILES_SIZE.width, TILES_SIZE.height);
+        ctx2d.drawImage(this.pic, x+4, y+4, TILES_SIZE.width-8, TILES_SIZE.height-8);
     }
     
 }
@@ -94,27 +94,32 @@ class Button extends MyImage{
         }
     }
 }
-class Timer{
+class Timer extends MyImage{
     constructor(x, y, size){
-        this.x = x;
-        this.y = y;
-        this.w = size / 8 * 5;
-        this.h = size;
+        super('1', x, y, size);
+        this.w = size / 8 * 5 * 2;
     }
     draw(){
         var sec = Math.floor(TIME_MAX - (performance.now() - gameData.gameStartTime)/1000);
-        var s = [0,0,'colon', 0, 0];
-        ctx2d.fillStyle="#ddd";
-        ctx2d.fillRect(this.x, this.y, this.w * 5, this.h);
-        s[0] = (sec - sec % 600) / 600;
-        sec-=s[0]*600;
-        s[1] = (sec - sec % 60) / 60;
-        sec-=s[1]*60;
-        s[3] = (sec - sec % 10) / 10;
-        sec-=s[3]*10;
-        s[4] = Math.max(0, sec);
-        for(i = 0; i < 5; i++){
-            ctx2d.drawImage(imageFiles[s[i]], this.x + i * this.w, this.y, this.w, this.h);
+        var s = [0,0];
+        s[0] = (sec - sec % 10) / 10;
+        sec-=s[0]*10;
+        s[1] = Math.max(0, sec);
+        for(i = 0; i < 2; i++){
+            if(imageFiles[s[i]] == null) {
+                s[i] = '0';
+            }
+            ctx2d.drawImage(imageFiles[s[i]], this.x + i * this.w / 2, this.y, this.w / 2, this.h);
         }  
+    }
+}
+class ScoreBoard extends MyImage{
+    constructor (x, y, size){
+        super('1', x, y, size);
+    }
+    draw(){
+        console.log("test");
+        ctx2d.fillStyle="#f00";
+        ctx2d.fillRect(this.x, this.y, this.w, this.h);
     }
 }
