@@ -33,12 +33,13 @@ let touchEndX = 0;
 let touchEndY = 0;
 
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
-window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベントを登録
+window.addEventListener('DOMContentLoaded', function(e){ ///キー入力イベントを登録
     window.addEventListener("keydown", function(e){
         if (e.key=="ArrowUp" || e.key=="ArrowDown" || e.key=="ArrowLeft" || e.key=="ArrowRight"){ //押されたのが方向キーだったら
             e.preventDefault();//スクロールを防ぐ
         }
     });
+    e.preventDefault();
 });
 
 
@@ -122,23 +123,39 @@ function init() {
     loadText();
     loadAnimation();
 
-    /*
     
     canvas.addEventListener('touchstart', function(e) {
         e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
         let touch = e.touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-        firstSelectedTile = getTileAtPosition(touchStartX, touchStartY);
+        const touchStartX = touch.clientX - rect.left;
+        const touchStartY = touch.clientY - rect.top;
+        const   scaleWidth =  canvas.clientWidth / canvas.width,
+                scaleHeight =  canvas.clientHeight / canvas.height;
+        const   x = Math.floor( touchStartX / scaleWidth),
+                y = Math.floor( touchStartY / scaleHeight);
+        if (mode === 0){
+            checkClickOfTitleObj(x, y);
+        } else if(mode === 2){
+            checkClickOfResultObj(x, y);
+        } else if(mode === 1){
+            firstSelectedTile = getTileAtPosition(x, y);
+        }
+
     }, { passive: false });
     
     canvas.addEventListener('touchmove', function(e) {
         e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
         let touch = e.touches[0];
-        touchEndX = touch.clientX;
-        touchEndY = touch.clientY;
+        const touchStartX = touch.clientX - rect.left;
+        const touchStartY = touch.clientY - rect.top;
+        const   scaleWidth =  canvas.clientWidth / canvas.width,
+                scaleHeight =  canvas.clientHeight / canvas.height;
+        const   x = Math.floor( touchStartX / scaleWidth),
+                y = Math.floor( touchStartY / scaleHeight);
     
-        let currentTile = getTileAtPosition(touchEndX, touchEndY);
+        let currentTile = getTileAtPosition(x, y);
         if (currentTile) {
             if (!firstSelectedTile) {
                 firstSelectedTile = currentTile;
@@ -156,7 +173,8 @@ function init() {
         e.preventDefault();
         resetSelection();
     }, { passive: false });
-    */
+    
+
 
     canvas.addEventListener('click', function(event) {
         // クリックされた座標を取得
@@ -171,7 +189,8 @@ function init() {
             checkClickOfTitleObj(x, y);
         } else if(mode === 2){
             checkClickOfResultObj(x, y);
-        } else if (mode === 1) {
+        } 
+        else if (mode === 1) {
             let clickedTile = null;
             let canSelect = true; // タイルが選択可能かどうかのフラグ
         
@@ -211,7 +230,7 @@ function init() {
                 console.log("Selected Tile:", clickedTile); // 選択したタイルの情報を出力
                 drawTiles(); // タイルを再描画
             }
-        }
+        } 
     });
 
     setMode(-1);
