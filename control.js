@@ -314,3 +314,6 @@ function resetSelection() {
     thirdSelectedTile = null;
 }
 
+function updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile){
+    gameData.score += 100;
+}
