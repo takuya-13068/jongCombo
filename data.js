@@ -105,7 +105,7 @@ class Timer extends MyImage{
         s[0] = (sec - sec % 10) / 10;
         sec-=s[0]*10;
         s[1] = Math.max(0, sec);
-        for(i = 0; i < 2; i++){
+        for(var i = 0; i < 2; i++){
             if(imageFiles[s[i]] == null) {
                 s[i] = '0';
             }
@@ -116,10 +116,28 @@ class Timer extends MyImage{
 class ScoreBoard extends MyImage{
     constructor (x, y, size){
         super('1', x, y, size);
+        this.score = gameData.score;
+        // 常に横幅は4文字分確保しておく
+        this.x-=this.w * 1.5;
+        this.w*=4;
+        this.scoreTransitionPerIter = 3;
+        this.drawScale = 1;
+    }
+    freshScore(){
+        if(this.score > gameData.score + this.scoreTransitionPerIter){
+            this.score-=this.scoreTransitionPerIter;
+        } else if(this.score < gameData.score - this.scoreTransitionPerIter){
+            this.score+=this.scoreTransitionPerIter;
+        } else {
+            this.score = gameData.score;
+        }
+        this.drawScale = 0.9 * this.drawScale + 0.1 * (1 + Math.min(0.2, Math.abs(this.score - gameData.score) * 0.01));
     }
     draw(){
-        console.log("test");
-        ctx2d.fillStyle="#f00";
-        ctx2d.fillRect(this.x, this.y, this.w, this.h);
+        this.freshScore();
+        var drawScore = Math.round(Math.min(9999, Math.max(0, this.score)));
+        for (var i = 0; i < String(drawScore).length; i++){
+            ctx2d.drawImage(imageFiles[String(drawScore)[i]], (this.x + this.w / 2) + i * this.w * this.drawScale / 4 - String(drawScore).length * this.w * this.drawScale / 8, this.y + (1 - this.drawScale) * this.h / 2, this.w * this.drawScale / 4, this.h * this.drawScale);
+        }
     }
 }
