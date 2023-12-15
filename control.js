@@ -260,9 +260,9 @@ function displayRemovedTiles() {
     let displayAreaHeight = HEIGHT * 1 / 10; // 上部の表示エリアの高さ
 
     removedTiles.forEach((tile, index) => {
-        let displayX = index * TILES_SIZE.width;
+        let displayX = index * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
         let displayY = GameArea.y - displayAreaHeight - 10; // GameAreaの少し上
-        ctx2d.drawImage(tile.pic, displayX, displayY, TILES_SIZE.width / 2, TILES_SIZE.height / 2); // サイズを半分にして表示
+        ctx2d.drawImage(tile.pic, displayX, displayY, TILES_SIZE.width * COMBO_TILE_SIZE_SCALE, TILES_SIZE.height * COMBO_TILE_SIZE_SCALE); // サイズを半分にして表示
     });
 }
 
