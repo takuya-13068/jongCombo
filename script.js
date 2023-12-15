@@ -78,6 +78,7 @@ function startGame() {
     gameObjList = [];
     gameObjList.push(new Timer(WIDTH*0.85, 30, HEIGHT*0.05));
     gameObjList.push(new ScoreBoard('center', 100, HEIGHT*0.1));
+    gameObjList.push(new ComboGauge('center', 200, HEIGHT*0.1));
 }
 
 
@@ -134,6 +135,9 @@ function tick() {
             if(comboLimitTime <= 0){//combo終了
                 combo = 0;
                 removedTiles = []; // Reset removedtile
+                gameObjList = gameObjList.filter(function(v){
+                    return v.constructor.name != 'GroupTile';
+                })
                 reachMode = false;
             }
         }
@@ -143,11 +147,9 @@ function tick() {
             }
         } else if (thirdSelectedTile != null) {
             removeSelectedTiles();
-            displayRemovedTiles();
             resetSelection();
         }
         drawGame();
-        displayRemovedTiles();
         if (performance.now() - gameData.gameStartTime > TIME_MAX * 1000) {
             setMode(2); // リザルト画面へ
         }
@@ -157,5 +159,3 @@ function tick() {
 
     requestAnimationFrame(tick);
 }
-
-

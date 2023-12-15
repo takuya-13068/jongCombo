@@ -6,13 +6,15 @@ const TIME_MAX = 100; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.55;
 
 const buttonList = ['start', 'entry', 'retry']; // img内に'button_XXX' のファイルを用意する
-const otherImagesList = ['logo', 'howto']; // img内に'XX.webp'のファイルを用意する
+const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full']; // img内に'XX.webp'のファイルを用意する
 const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
 const menuButtonHeight = 90;
 const titleLogoHeight = 280;
 const tileEffectSize = 120;
 const ScoreBoardLoop = 10;
+const ComboGaugeLoop = 10;
+const COMBO_MAX_TIME = 5;
 
 const score = [100,200,400,800];
 
@@ -51,22 +53,47 @@ class Tile {
         this.verticalV = 0;
         this.towardX = x;
         this.towardY = y;
+        this.size = 1;
         let imageName = FILE_NAME_MAP[this.kind] + String(this.value) + '_1';
         this.pic = imageFiles.tiles[imageName];
     } 
 
     draw() {
-        this.x = this.towardX;
+        if(this.x + 3 < this.towardX){
+            this.x+=3;
+        } else if(this.x - 3 > this.towardX){
+            this.x-=3;
+        } else {
+            this.x = this.towardX;
+        }
+        this.x = 0.9 * this.x + 0.1 * this.towardX;
+        if(this.x - this.towardX < 3){
+            this.x = this.towardX;
+        }
         if (this.y + this.verticalV + 1< this.towardY){
             this.y+=this.verticalV;
+            if(this.verticalV < -3) {
+                this.verticalV = -3;
+            }
             this.verticalV++;
         } else if(this.y - this.verticalV - 1 > this.towardY){
-            this.y-=this.verticalV;
+            this.y+=this.verticalV;
             this.verticalV--;
+            if(this.verticalV > 3) {
+                this.verticalV = 3;
+            }
         } else {
             this.y = this.towardY;
+            this.verticalV = 0;
         }
-        ctx2d.drawImage(this.pic, this.x+4, this.y+4, TILES_SIZE.width-8, TILES_SIZE.height-8);
+        ctx2d.drawImage(this.pic, this.x+4 *this.size, this.y+4*this.size, (TILES_SIZE.width-8)*this.size,(TILES_SIZE.height-8)*this.size);
+    }
+}
+class GroupTile extends Tile{
+    constructor(kind, value, x, y){
+        super(kind, value, x, y);
+        this.initialTime = performance.now();
+        this.size = COMBO_TILE_SIZE_SCALE;
     }
 }
 
@@ -188,5 +215,24 @@ class MyAnimation extends MyImage{
     }
     isOver(){
         return (t > this.initialT + this.maxT);
+    }
+}
+
+class ComboGauge extends MyImage{
+    constructor (x, y, size){
+        super('gauge', x, y, size);
+        this.gaugeValue = 0;
+    }
+    draw(){
+        var comboGaugeSpeed = Math.max(0.05, Math.abs(this.gaugeValue - comboLimitTime / COMBO_MAX_TIME) / ComboGaugeLoop);
+        if (this.gaugeValue > comboLimitTime / COMBO_MAX_TIME + comboGaugeSpeed) {
+            this.gaugeValue -= comboGaugeSpeed;
+        } else if(this.gaugeValue < comboLimitTime / COMBO_MAX_TIME - comboGaugeSpeed){
+            this.gaugeValue += comboGaugeSpeed;
+        } else {
+            this.gaugeValue = comboLimitTime / COMBO_MAX_TIME;
+        }
+        ctx2d.drawImage(imageFiles['gauge'], this.x, this.y, this.w, this.h);   
+        ctx2d.drawImage(imageFiles['gauge_full'], 0, 0, imageFiles['gauge_full'].width * this.gaugeValue, imageFiles['gauge_full'].height, this.x, this.y, this.w * this.gaugeValue, this.h);   
     }
 }
