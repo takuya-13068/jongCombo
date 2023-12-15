@@ -5,7 +5,7 @@ const COLSET = {green: '#116D4E', brown:'#4E3636'};
 const TIME_MAX = 100; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.55;
 
-const buttonList = ['start', 'entry', 'retry']; // img内に'button_XXX' のファイルを用意する
+const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'button_XXX' のファイルを用意する
 const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full']; // img内に'XX.webp'のファイルを用意する
 const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
@@ -126,6 +126,10 @@ class Button extends MyImage{
         super(kind, x, y, size);
         this.wave = true;
         this.shadow = true;
+        if(kind == 'backToHome') {
+            this.wave = false;
+            this.shadow = false;
+        }
     }
     checkClicked(clickedX, clickedY){
         if(this.x < clickedX && clickedX < this.x + this.w){
@@ -141,6 +145,8 @@ class Button extends MyImage{
         } else if(this.kind == 'retry'){
             setMode(1);
         } else if(this.kind == 'entry'){
+            setMode(0);
+        } else if(this.kind == 'backToHome'){
             setMode(0);
         }
     }
