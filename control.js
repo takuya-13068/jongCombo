@@ -3,6 +3,11 @@ let imagesLoaded = 0; // 読み込まれた画像の数
 let totalTiles; //title total
 
 
+function compareFunc(a, b) {
+    return a - b;
+}
+
+
 function drawTiles() {
     //ctx2d.clearRect(GameArea.x, GameArea.y, GameArea.width, GameArea.height); // キャンバスをクリア
 
@@ -102,13 +107,13 @@ function CreateTile(){
 
     try{
         if(number < 9) {
-            return new Tile("manzu", number + 1);
+            return new Tile("manzu", number + 1, 0,0,30);
         }
         else if (number < 18) {
-            return new Tile("pinzu", number - 8);
+            return new Tile("pinzu", number - 8, 0,0,30);
         }
         else if (number < 25) {
-            return new Tile("jihai", number - 17);
+            return new Tile("jihai", number - 17, 0,0,30);
         }
         else throw new Error("選択された数値が不正です。");
     } catch (e){
@@ -152,10 +157,6 @@ function ValidateSecondTile(selectedTile, newTile) {
         }
     }
 }
-
-function compareFunc(a, b) {
-    return a - b;
-  }
 
 function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
     //console.log("First Selected Tile:", firstSelectedTile);
@@ -210,34 +211,6 @@ function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
     }
 
 }
-
-
-/*
-function dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex) {
-    console.log(firstTileIndex + " " + secondTileIndex + ", " + thirdTileIndex);
-    // 消えたタイルの列を特定
-    let columnsToDrop = [firstTileIndex % (GameArea.width / TILES_SIZE.width),
-                         secondTileIndex % (GameArea.width / TILES_SIZE.width),
-                         thirdTileIndex % (GameArea.width / TILES_SIZE.width)];
-    console.log(columnsToDrop);
-    tiles.forEach(tile => {
-        let tileIndex = tiles.indexOf(tile);
-        let columnIndex = tileIndex % (GameArea.width / TILES_SIZE.width);
-
-        if (columnsToDrop.includes(columnIndex)) {
-            let j = Math.floor(tileIndex / (GameArea.width / TILES_SIZE.width));
-            let newJ = j + 1; // 下に1マス移動
-            if (newJ < (GameArea.height / TILES_SIZE.height)) {
-                tile.x = parseInt(GameArea.x + TILES_SIZE.width * columnIndex);
-                tile.y = parseInt(GameArea.y + TILES_SIZE.height * newJ);
-            }
-        }
-    });
-
-    addNewTiles(columnsToDrop);
-}
-*/
-
 
 function dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex) {
     let columnsToDrop = [firstTileIndex % (GameArea.width / TILES_SIZE.width),
@@ -294,16 +267,18 @@ function moveTileDown(tileIndex) {
 }
 
 function removeSelectedTiles() {
-    // 選択されたタイルのインデックスを取得
-    let selectedTileIndices = [tiles.indexOf(firstSelectedTile), tiles.indexOf(secondSelectedTile), tiles.indexOf(thirdSelectedTile)];
-    selectedTileIndices = selectedTileIndices.sort(compareFunc);
-
-    // 重複を排除
-    selectedTileIndices = [...new Set(selectedTileIndices)];
-
+    // 選択されたタイルの情報を取得, 配列に追加
     let selectedTiles = [firstSelectedTile, secondSelectedTile, thirdSelectedTile];
     selectedTiles.sort((a, b) => a.value - b.value);
     removedTiles.push(...selectedTiles);
+
+    // Score
+    updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile);
+
+    // 選択されたタイルのインデックスを取得
+    let selectedTileIndices = [tiles.indexOf(firstSelectedTile), tiles.indexOf(secondSelectedTile), tiles.indexOf(thirdSelectedTile)];
+    selectedTileIndices = selectedTileIndices.sort(compareFunc);
+    selectedTileIndices = [...new Set(selectedTileIndices)];
 
     // タイルを削除し、必要なタイルを移動
     selectedTileIndices.forEach(tileIndex => {
@@ -323,26 +298,6 @@ function removeSelectedTiles() {
 }
 
 
-/*
-function removeSelectedTiles() {
-    // 選択されたタイルのインデックスを取得
-    let firstTileIndex = tiles.indexOf(firstSelectedTile);
-    let secondTileIndex = tiles.indexOf(secondSelectedTile);
-    let thirdTileIndex = tiles.indexOf(thirdSelectedTile);
-
-    // 選択されたタイルを消す
-    tiles = tiles.filter(tile => tile !== firstSelectedTile && tile !== secondSelectedTile && tile !== thirdSelectedTile);
-
-    // 上にあるタイルを移動させるためのインデックスを更新
-    //console.log(firstTileIndex, secondTileIndex, thirdTileIndex);
-    dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex);
-
-    // 消されたタイルを記録
-    removedTiles.push(firstSelectedTile, secondSelectedTile, thirdSelectedTile);
-}
-*/
-
-
 function displayRemovedTiles() {
     let displayAreaHeight = HEIGHT * 1 / 10; // 上部の表示エリアの高さ
 
@@ -358,3 +313,4 @@ function resetSelection() {
     secondSelectedTile = null;
     thirdSelectedTile = null;
 }
+
