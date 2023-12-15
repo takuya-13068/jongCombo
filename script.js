@@ -37,7 +37,7 @@ function drawTitle(){//タイトル画面の描画
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
     ctx2d.fillStyle = COLSET['green'];
     ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
-    for(i = 0; i < titleObjList.length; i++){
+    for(var i = 0; i < titleObjList.length; i++){
         titleObjList[i].draw();
     }
 }
@@ -54,13 +54,13 @@ function drawGame(){//ゲーム画面の描画
     ctx2d.fillStyle = COLSET['green'];
     ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
     drawTiles();
-    for(i = 0; i < gameObjList.length; i++){
+    for(var i = 0; i < gameObjList.length; i++){
         gameObjList[i].draw();
     }
 }
 
 function checkClickOfTitleObj(x, y){
-    for(i = 0; i < titleObjList.length; i++){
+    for(var i = 0; i < titleObjList.length; i++){
         if(titleObjList[i].constructor.name == 'Button'){
             if(titleObjList[i].checkClicked(x, y)){
                 titleObjList[i].clicked();
@@ -83,6 +83,7 @@ function startGame() {
     fieldCreated = true;
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
     gameData.gameStartTime = performance.now(); // ゲーム開始時間を記録
+    gameData.score = 0;
     gameObjList = [];
     gameObjList.push(new Timer(WIDTH*0.85, 30, HEIGHT*0.05));
     gameObjList.push(new ScoreBoard('center', 100, HEIGHT*0.1));
