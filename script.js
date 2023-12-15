@@ -138,18 +138,19 @@ function init() {
             checkClickOfTitleObj(x, y);
         } else if(mode === 2){
             checkClickOfResultObj(x, y);
-        } 
+        } else if(mode === 1){
+            firstSelectedTile = getTileAtPosition(touchStartX, touchStartY);
+        }
 
-        firstSelectedTile = getTileAtPosition(touchStartX, touchStartY);
     }, { passive: false });
     
     canvas.addEventListener('touchmove', function(e) {
         e.preventDefault();
         let touch = e.touches[0];
-        touchEndX = touch.clientX;
-        touchEndY = touch.clientY;
+        touchNowX = touch.clientX - rect.left;
+        touchNowY = touch.clientY - rect.top;
     
-        let currentTile = getTileAtPosition(touchEndX, touchEndY);
+        let currentTile = getTileAtPosition(touchNowX, touchNowY);
         if (currentTile) {
             if (!firstSelectedTile) {
                 firstSelectedTile = currentTile;
@@ -164,7 +165,7 @@ function init() {
     }, { passive: false });
     
     canvas.addEventListener('touchend', function(e) {
-        //e.preventDefault();
+        e.preventDefault();
         resetSelection();
     }, { passive: false });
     
