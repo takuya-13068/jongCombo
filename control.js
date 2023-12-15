@@ -219,7 +219,7 @@ function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
 function getTilePosFromIndex(tileIndex){
     var pos = [0, 0];
     pos[0] = tileIndex % TILES_HORIZONTAL * TILES_SIZE.width;
-    pos[1] = GameArea.y + (tileIndex - tileIndex % TILES_HORIZONTAL) / TILES_VERTICAL;
+    pos[1] = GameArea.y + (tileIndex - tileIndex % TILES_HORIZONTAL) / TILES_HORIZONTAL * TILES_SIZE.height;
     return pos;
 }
 
@@ -238,7 +238,12 @@ function removeSelectedTiles() {
     selectedTileIndices = [...new Set(selectedTileIndices)];
 
     // タイルを削除し、必要なタイルを移動
+    console.log(selectedTileIndices);
     selectedTileIndices.forEach(tileIndex => {
+        // アニメーションの追加
+        pos = getTilePosFromIndex(tileIndex);
+        gameObjList.push(new MyAnimation(0, pos[0] + (TILES_SIZE.width - tileEffectSize)/2, pos[1] + (TILES_SIZE.height - tileEffectSize)/2, tileEffectSize, 30 * 15));
+
         while (tileIndex >= TILES_SIZE.row) {
             moveTileDown(tileIndex);
             tileIndex -= TILES_SIZE.row;
