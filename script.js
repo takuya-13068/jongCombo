@@ -102,6 +102,7 @@ function init() {
     loadButtons();
     loadOtherImages();
     loadText();
+    loadAnimation();
     canvas.addEventListener('click', function(event) {
         // クリックされた座標を取得
         const rect = canvas.getBoundingClientRect();

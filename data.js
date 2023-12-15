@@ -5,7 +5,8 @@ const COLSET = {green: '#116D4E', brown:'#4E3636'};
 const TIME_MAX = 100; // ゲーム時間（秒）
 
 const buttonList = ['start', 'entry', 'retry']; // img内に'button_XXX' のファイルを用意する
-const otherImagesList = ['logo', 'howto', 'explosion']; // img内に'XX.webp'のファイルを用意する
+const otherImagesList = ['logo', 'howto']; // img内に'XX.webp'のファイルを用意する
+const animationImagesList = [{id:'explosion', w:5, h:3}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
 const menuButtonHeight = 90;
 const titleLogoHeight = 280;
