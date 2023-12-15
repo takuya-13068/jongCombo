@@ -317,12 +317,10 @@ function updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile){
     if(combo < 4) {
         combo += 1;
         gameData.score += 100 * (2 ** (combo - 1));
+        combostart = performance.now() - initialPfnw;
         comboLimitTime = 5.0;
     }
 
-    
-
     // calculate role point
-
 
 }

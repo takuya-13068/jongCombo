@@ -22,7 +22,8 @@ let tiles = []; // ここにタイルの情報を格納する
 let imagesLoaded = 0; // 読み込まれた画像の数
 let totalTiles; //title total
 let combo = 0;
-let comboLimitTime = 5.0;// comboが持続するタイマー
+let comboLimitTime = 0;// comboが持続するタイマー
+let combostart;
 
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(){ ///キー入力イベントを登録
@@ -203,8 +204,16 @@ function tick() {
     } else if (mode === 0) {
         drawTitle();
     } else if (mode === 1) {
+        if(comboLimitTime > 0){
+            comboLimitTime = Math.max(5.0 - (t - combostart) /1000, 0);
+            if(comboLimitTime <= 0){//combo終了
+                combo = 0;
+                // Reset removedtile
+                removedTiles = [];
+            }
+        }
         if (combo === 4){
-
+            //雀頭選択立直モード
         }
         if (thirdSelectedTile != null) {
             let firstTileIndex = tiles.indexOf(firstSelectedTile);
@@ -219,7 +228,7 @@ function tick() {
         displayRemovedTiles();
         if (performance.now() - gameData.gameStartTime > TIME_MAX * 1000) {
             setMode(2); // リザルト画面へ
-        }    
+        }
     } else if (mode === 2) {
         drawResult();
     }
