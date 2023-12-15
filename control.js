@@ -5,7 +5,6 @@ function compareFunc(a, b) {
     return a - b;
 }
 
-
 function drawTiles() {
     //ctx2d.clearRect(GameArea.x, GameArea.y, GameArea.width, GameArea.height); // キャンバスをクリア
 
