@@ -27,7 +27,9 @@ const role = {"All Simples": 1, "Double-Run": 1, "Value Tiles": 1,
 //麻雀牌
 const TILES_SIZE = {width: WIDTH/6, height: HEIGHT * 3 /5 / 5};
 const FILE_NAME_MAP = {'manzu' : 'p_ms', 'pinzu' : 'p_ps', 'sozu' : 'p_ss', 'jihai' : 'p_ji'};
-const tile_number = 9 + 9 + 7; //manzu, pinzu, jihai
+//const tile_number = 9 + 9 + 7; //manzu, pinzu, jihai
+const tile_number = 9 + 9 + 3; //manzu, pinzu, 三元杯
+
 class Tile {
     constructor(kind, value){
         this.kind = kind;

@@ -111,7 +111,7 @@ function CreateTile(){
         else if (number < 18) {
             return new Tile("pinzu", number - 8, 0,0,30);
         }
-        else if (number < 25) {
+        else if (number < tile_number) {
             return new Tile("jihai", number - 17, 0,0,30);
         }
         else throw new Error("選択された数値が不正です。");
