@@ -26,18 +26,36 @@ const role = {"All Simples": 1, "Double-Run": 1, "Value Tiles": 1,
 
 //麻雀牌
 const TILES_SIZE = {width: WIDTH/6, height: HEIGHT * 3 /5 / 5};
+const TILES_HORIZONTAL = Math.floor(GameArea.width / TILES_SIZE.width);
+const TILES_VERTICAL = Math.floor(GameArea.height / TILES_SIZE.height);
 const FILE_NAME_MAP = {'manzu' : 'p_ms', 'pinzu' : 'p_ps', 'sozu' : 'p_ss', 'jihai' : 'p_ji'};
 const tile_number = 9 + 9 + 7; //manzu, pinzu, jihai
 class Tile {
-    constructor(kind, value){
+    constructor(kind, value, x, y){
         this.kind = kind;
         this.value = value;
+        this.x = x;
+        this.y = y;
+        this.verticalV = 0;
+        this.towardX = x;
+        this.towardY = y;
         let imageName = FILE_NAME_MAP[this.kind] + String(this.value) + '_1';
         this.pic = imageFiles.tiles[imageName];
     } 
 
-    draw(ctx2d, x, y) {
-        ctx2d.drawImage(this.pic, x+4, y+4, TILES_SIZE.width-8, TILES_SIZE.height-8);
+    draw() {
+        this.x = 0.9 * this.x + 0.1 * this.towardX;
+        this.y = 0.9 * this.y + 0.1 * this.towardY;
+        if (this.y + this.verticalV + 1< this.towardY){
+            this.y+=this.verticalV;
+            this.verticalV++;
+        } else if(this.y - this.verticalV - 1 > this.towardY){
+            this.y-=this.verticalV;
+            this.verticalV--;
+        } else {
+            this.y = this.towardY;
+        }
+        ctx2d.drawImage(this.pic, this.x+4, this.y+4, TILES_SIZE.width-8, TILES_SIZE.height-8);
     }
 }
 
