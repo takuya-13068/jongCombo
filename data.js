@@ -31,9 +31,18 @@ class Tile {
     constructor(kind, value){
         this.kind = kind;
         this.value = value;
+        let imageName = FILE_NAME_MAP[this.kind] + String(this.value) + '_1';
+        this.pic = imageFiles.tiles[imageName];
+        /*
         this.pic = new Image(); // ❗これだとタイルをnewする度にファイルを読みにいっちゃうから、modeが-1のときにまとめて画像ファイルをimageFiles.tilesの中に読み込んで、描画するときはimageFiles.tilesの中身経由でファイルを読むようにしてくれい　imageFiles.buttonで全く同じ処理やってるから参考に
         this.pic.src = './assets/img/' + FILE_NAME_MAP[this.kind] + String(this.value) + '_1.gif';
+        */
+    } 
+
+    draw(ctx2d, x, y) {
+        ctx2d.drawImage(this.pic, x, y, TILES_SIZE.width, TILES_SIZE.height);
     }
+    
 }
 class MyImage{
     constructor (kind, x, y, size){

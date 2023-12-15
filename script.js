@@ -13,7 +13,9 @@ let secondSelectedTile = null; // 2番目に選択されたタイルを追跡す
 let thirdSelectedTile = null; // 3番目に選択されたタイルを追跡する変数
 let removedTiles = []; // 消されたタイルを記録するための配列
 let gameData = {score:0, gameStartTime:0}; // ゲームデータ score:スコア
-let imageFiles = {}; // 画像ファイルをここに読み込んでおく（毎回newしない）
+let imageFiles = {
+    tiles: {},
+}; // 画像ファイルをここに読み込んでおく（毎回newしない）
 let titleObjList = []; // タイトル画面に描画するオブジェクトをリスト形式で保存
 let resultObjList = []; // リザルト画面に描画するオブジェクトをリスト形式で保存 
 let gameObjList = []; // ゲーム画面で描画するオブジェクトをリスト形式で保存
@@ -82,6 +84,8 @@ function startGame() {
     gameObjList.push(new Timer(WIDTH*0.68, 30, HEIGHT*0.05));
 }
 
+
+
 function init() {
     canvas = document.getElementById("myCanvas");
     ctx2d = document.getElementById("myCanvas").getContext("2d");
@@ -89,6 +93,7 @@ function init() {
     loadButtons();
     loadOtherImages();
     loadText();
+    loadTileImages();
     canvas.addEventListener('click', function(event) {
         // クリックされた座標を取得
         const rect = canvas.getBoundingClientRect();
@@ -141,6 +146,12 @@ function init() {
                     ctx2d.fillText('You can not choose the tile!', 10, 30);
                 }
             }
+
+            if (clickedTile) {
+                // タイル選択処理...
+                let selectedIndex = tiles.indexOf(clickedTile);
+                console.log("Selected Tile Index:", selectedIndex); // インデックスを出力
+            }
         }
     });
 
@@ -176,6 +187,7 @@ function tick() {
     } else if (mode === 0) {
         drawTitle();
     } else if (mode === 1) {
+        drawTiles();
         if (thirdSelectedTile != null) {
             let firstTileIndex = tiles.indexOf(firstSelectedTile);
             let secondTileIndex = tiles.indexOf(secondSelectedTile);
@@ -184,12 +196,12 @@ function tick() {
             removeSelectedTiles();
             displayRemovedTiles();
             //dropTiles(); // dropTiles関数の呼び出し
-            addNewTiles();
+            //addNewTiles();
             resetSelection();
             console.log("oisu");
         }
         drawGame();
-        if (performance.now() - gameData.gameStartTime > TIME_MAX * 1000) {
+        if (performance.now() - gameData.gameStartTime > TIME_MAX * 30000) {
             setMode(2); // リザルト画面へ
         }    
     } else if (mode === 2) {
