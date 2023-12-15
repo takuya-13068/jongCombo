@@ -132,7 +132,7 @@ function init() {
             }
         
             if (clickedTile) { // 選択できるか条件
-
+                // 選択解除
                 if (clickedTile === firstSelectedTile) {
                     firstSelectedTile = null;
                 } else if (clickedTile === secondSelectedTile) {
@@ -140,33 +140,19 @@ function init() {
                 } else if (clickedTile === thirdSelectedTile) {
                     thirdSelectedTile = null;
                 } 
-                else if (!firstSelectedTile) {
-                    firstSelectedTile = clickedTile;
-                } else if (!secondSelectedTile && ValidateSecondTile(firstSelectedTile, clickedTile)) {
-                    secondSelectedTile = clickedTile;
-                } else if (secondSelectedTile && ValidateThirdTile(firstSelectedTile, secondSelectedTile, clickedTile)) {
-                    // 3番目のタイルを選択
-                    console.log("Third Tile selected");
-                    thirdSelectedTile = clickedTile;
+                //何個目の選択タイルか判定
+                else if (!firstSelectedTile) { // 1番目のタイルを選択
+                    firstSelectedTile = clickedTile; 
+                } else if (!secondSelectedTile && ValidateSecondTile(firstSelectedTile, clickedTile, reachMode)) { // 2番目のタイルを選択
+                    secondSelectedTile = clickedTile; 
+                } else if (secondSelectedTile && ValidateThirdTile(firstSelectedTile, secondSelectedTile, clickedTile)) { // 3番目のタイルを選択
+                    thirdSelectedTile = clickedTile; 
                 } else {
                     canSelect = false; // タイルが選択できない場合
                 }
         
-                //selectedTile = clickedTile; // 選択したタイルを設定
                 console.log("Selected Tile:", clickedTile); // 選択したタイルの情報を出力
                 drawTiles(); // タイルを再描画
-
-                if (!canSelect) {
-                    ctx2d.fillStyle = 'red';
-                    ctx2d.font = 'bold 20px Arial';
-                    ctx2d.fillText('You can not choose the tile!', 10, 30);
-                }
-            }
-
-            if (clickedTile) {
-                // タイル選択処理...
-                let selectedIndex = tiles.indexOf(clickedTile);
-                console.log("Selected Tile Index:", selectedIndex); // インデックスを出力
             }
         }
     });
@@ -211,10 +197,9 @@ function tick() {
                 removedTiles = []; // Reset removedtile
             }
         }
-        if (combo === 4){ //雀頭選択立直モード
+        if (reachMode){ //雀頭選択立直モード
             
-        }
-        if (thirdSelectedTile != null) {
+        } else if (thirdSelectedTile != null) {
             removeSelectedTiles();
             displayRemovedTiles();
             resetSelection();

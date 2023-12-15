@@ -7,17 +7,17 @@ function compareFunc(a, b) {
 
 
 function drawTiles() {
-    //ctx2d.clearRect(GameArea.x, GameArea.y, GameArea.width, GameArea.height); // キャンバスをクリア
-
     ctx2d.fillStyle = COLSET['green'];
     ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
 
     for (let tile of tiles) {
-        let i = tiles.indexOf(tile) % (GameArea.width / TILES_SIZE.width);
-        let j = Math.floor(tiles.indexOf(tile) / (GameArea.width / TILES_SIZE.width));
+        let i = tiles.indexOf(tile) % parseInt(GameArea.width / TILES_SIZE.width);
+        let j = Math.floor(tiles.indexOf(tile) / parseInt(GameArea.width / TILES_SIZE.width));
         let tileX = parseInt(GameArea.x + TILES_SIZE.width * i);
         let tileY = parseInt(GameArea.y + TILES_SIZE.height * j);
         
+        tile.draw(ctx2d, tileX + widthMargin/2, tileY + heightMargin/2); // Tileクラスのdrawメソッドを使ってタイルを描画
+
         tile.towardX = tileX;
         tile.towardY = tileY;
         tile.draw(); // Tileクラスのdrawメソッドを使ってタイルを描画
@@ -33,6 +33,7 @@ function drawTiles() {
 function createField() {
     tiles = [];
     imagesLoaded = 0;
+    
     totalTiles = TILES_VERTICAL*TILES_HORIZONTAL;
 
     for (var i = 0; i < totalTiles; i++){
@@ -112,7 +113,7 @@ function CreateTile(x, y){
         else if (number < 18) {
             return new Tile("pinzu", number - 8, x, y);
         }
-        else if (number < 25) {
+        else if (number < tile_number) {
             return new Tile("jihai", number - 17, x, y);
         }
         else throw new Error("選択された数値が不正です。");
@@ -122,10 +123,7 @@ function CreateTile(x, y){
 }
 
 
-function ValidateSecondTile(selectedTile, newTile) {
-    //console.log("Selected Tile:", selectedTile);
-    //console.log("New Tile:", newTile);
-
+function ValidateSecondTile(selectedTile, newTile, reachMode) {
     let firstTileIndex = tiles.indexOf(firstSelectedTile);
     let newTileIndex = tiles.indexOf(newTile);
     
@@ -145,13 +143,16 @@ function ValidateSecondTile(selectedTile, newTile) {
         const newTileNumber = newTile.value;
 
         if (firstTileKind === newTileKind) {
-            if(firstTileKind === "manzu" || firstTileKind === "pinzu"){ //萬子, 筒子
-                if(Math.abs(firstTileNumber - newTileNumber) <= 2 ) return true;
-                else return false;
-            } else{ //字牌
-                if (firstTileNumber === newTileNumber) return true;
-                else return false;
-            }
+            if(!reachMode){ 
+                if(firstTileKind === "manzu" || firstTileKind === "pinzu"){ //萬子, 筒子
+                    if(Math.abs(firstTileNumber - newTileNumber) <= 2 ) return true;
+                    else return false;
+                } else{ //字牌
+                    if (firstTileNumber === newTileNumber) return true;
+                    else return false;
+                }
+            } else if (firstTileNumber === newTileNumber) return true; //reachModeの時は雀頭判定だけ
+            else return false;
         } else{
             return false;
         }
@@ -159,10 +160,6 @@ function ValidateSecondTile(selectedTile, newTile) {
 }
 
 function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
-    //console.log("First Selected Tile:", firstSelectedTile);
-    //console.log("Second Selected Tile:", secondSelectedTile);
-    //console.log("New Tile:", newTile);
-
     let newTileIndex = tiles.indexOf(newTile);
     
     let newTileRow = Math.floor(newTileIndex / (GameArea.width / TILES_SIZE.width));
@@ -209,7 +206,6 @@ function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
             return false;
         }
     }
-
 }
 
 function getTilePosFromIndex(tileIndex){
@@ -217,17 +213,6 @@ function getTilePosFromIndex(tileIndex){
     pos[0] = tileIndex % TILES_HORIZONTAL * TILES_SIZE.width;
     pos[1] = GameArea.y + (tileIndex - tileIndex % TILES_HORIZONTAL) / TILES_VERTICAL;
     return pos;
-}
-
-function moveTileDown(tileIndex) {
-    if (tileIndex < 6) {
-        // 上のタイルがない場合は、新しいタイルを生成
-        var pos = getTilePosFromIndex(tileIndex);
-        tiles[tileIndex] = CreateTile(pos[0], pos[1] - TILES_SIZE.height);
-    } else {
-        // 上のタイルを現在の位置に移動
-        tiles[tileIndex] = tiles[tileIndex - 6];
-    }
 }
 
 function removeSelectedTiles() {
@@ -261,7 +246,6 @@ function removeSelectedTiles() {
     resetSelection();
 }
 
-
 function displayRemovedTiles() {
     let displayAreaHeight = HEIGHT * 1 / 10; // 上部の表示エリアの高さ
 
@@ -276,6 +260,16 @@ function resetSelection() {
     firstSelectedTile = null;
     secondSelectedTile = null;
     thirdSelectedTile = null;
+}
+
+function moveTileDown(tileIndex) {
+    if (tileIndex < 6) {
+        // 上のタイルがない場合は、新しいタイルを生成
+        tiles[tileIndex] = CreateTile();
+    } else {
+        // 上のタイルを現在の位置に移動
+        tiles[tileIndex] = tiles[tileIndex - 6];
+    }
 }
 
 function updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile){
