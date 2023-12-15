@@ -49,59 +49,6 @@ function createField() {
     }
 }
 
-function loadButtons(){
-    for (var i = 0; i < buttonList.length; i++){
-        imageFiles[buttonList[i]] = new Image();
-        imageFiles[buttonList[i]].src = './assets/img/button_' + buttonList[i]  + '.png';
-        imageFiles[buttonList[i]].onload = function(){
-            loadedImgCnt++;
-        }
-    }
-}
-function loadOtherImages(){
-    for (var i = 0; i < otherImagesList.length; i++){
-        imageFiles[otherImagesList[i]] = new Image();
-        imageFiles[otherImagesList[i]].src = './assets/img/' + otherImagesList[i]  + '.webp';
-        imageFiles[otherImagesList[i]].onload = function(){
-            loadedImgCnt++;
-        }
-    }
-}
-function loadText(){
-    for (var i = 0; i < textImageList.length; i++){
-        imageFiles[textImageList[i]] = new Image();
-        imageFiles[textImageList[i]].src = './assets/text/' + textImageList[i]  + '.webp';
-        imageFiles[textImageList[i]].onload = function(){
-            loadedImgCnt++;
-        }
-    }
-}
-function loadAnimation(){
-    for (var i = 0; i < animationImagesList.length; i++){
-        imageFiles[animationImagesList[i].id] = new Image();
-        imageFiles[animationImagesList[i].id].src = './assets/animation/' + animationImagesList[i].id  + '.webp';
-        imageFiles[animationImagesList[i].id].onload = function(){
-            loadedImgCnt++;
-        }
-    }
-}
-
-function loadTileImages() {
-    for (let kind in FILE_NAME_MAP) {
-        let maxTiles = kind === 'jihai' ? 7 : 9;
-        for (let i = 1; i <= maxTiles; i++) {
-            let imageName = FILE_NAME_MAP[kind] + i + '_1';
-            imageFiles.tiles[imageName] = new Image();
-            imageFiles.tiles[imageName].src = './assets/img/' + imageName + '.gif';
-            imageFiles.tiles[imageName].onload = function() {
-                loadedImgCnt++;
-                if (loadedImgCnt === totalTiles) {
-                    setMode(0); // すべての画像が読み込まれたら、モードを変更
-                }
-            };
-        }
-    }
-}
 
 
 function getRandomInt(max) {
@@ -227,7 +174,7 @@ function removeSelectedTiles() {
     removedTiles.push(...selectedTiles);
 
     // Score
-    updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile);
+    updateScore();
 
     // 選択されたタイルのインデックスを取得
     let selectedTileIndices = [tiles.indexOf(firstSelectedTile), tiles.indexOf(secondSelectedTile), tiles.indexOf(thirdSelectedTile)];
@@ -283,7 +230,7 @@ function moveTileDown(tileIndex) {
     }
 }
 
-function updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile){
+function updateScore(){
     // combo score
     if(combo < 4) {
         combo += 1;
@@ -294,5 +241,71 @@ function updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile){
     }
 
     // calculate role point
+    else if(reachMode){
+        try{
+            calculateRole();
+        } catch (e){
+            console.error("ERROR: " , e.message);
+        }
+    }
+}
 
+function validateOneNine(index){
+    if (index == 1 && index == 9) return true;
+    else return false;
+}
+
+function calculateRole(){
+    let role_set = [];
+    let han = 0;
+    let tile_set = []; // 牌情報
+    let tiles_kind = []; //種類
+    let tiles_style = []; //面子、順子判定
+    let val = true;
+
+    // 牌登録
+    for(let i=0; i< 4; i++){
+        tile_set[i] = [removedTiles[i*3], removedTiles[i*3+1], removedTiles[i*3+2]];
+        tiles_kind[i] = tile_set[i][0].kind;
+        if(tile_set[i][0].value === tile_set[i][1].value) tiles_style[i] = true; // 面子
+        else tiles_style[i] = false; // 順子
+    } 
+    tile_set[4] = [removedTiles[4*3], removedTiles[4*3+1]]; //雀頭
+    tiles_kind[4] = tile_set[4][0].kind;
+
+    //立直
+    role_set.append("Reach");
+    
+    //タンヤオ
+    if(tile_set[4][0].kind != "jihai" && !validateOneNine(tile_set[4][0].value)){
+        for (const tiles_s of tile_set){
+            if(validateOneNine(tiles_s[0].value) || validateOneNine(tiles_s[1].value) || validateOneNine(tiles_s[1].value)) {
+                val = false;
+                break
+            }
+        } if(val) role_set.append("ALL Simples");
+    }
+
+    //一盃口、二盃口
+    val = true;
+
+    //混一色、清一色
+    const set_kind = Array.from(new Set(tiles_kind));
+    if(set_kind.length) role_set.append("Full Flush");
+    else if(set_kind.length == 2 && set_kind.includes("jihai")) role_set.append("Half Flush");
+
+    //三暗刻、四暗刻
+    val = true;
+    cnt_type = tiles_style.filter(value => value === true).length;
+    if(cnt_type === 4) role_set.append("Four Triples");
+    else if(cnt_type === 3) role_set.append("Three Triples");
+
+    // 小三元、大三元
+
+    // 名称から飜計算
+    for (const name of role_set){
+        han += role[name];
+    } 
+    if(han >13) score += 32000;
+    else score += role_score[han];
 }
