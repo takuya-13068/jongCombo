@@ -120,8 +120,8 @@ function init() {
             let canSelect = true; // タイルが選択可能かどうかのフラグ
         
             for (let tile of tiles) { //選択されたタイルの情報をとる
-                let i = tiles.indexOf(tile) % (GameArea.width / TILES_SIZE.width);
-                let j = Math.floor(tiles.indexOf(tile) / (GameArea.width / TILES_SIZE.width));
+                let i = tiles.indexOf(tile) % parseInt(GameArea.width / TILES_SIZE.width);
+                let j = Math.floor(tiles.indexOf(tile) / parseInt(GameArea.width / TILES_SIZE.width));
                 let tileX = parseInt(GameArea.x + TILES_SIZE.width * i);
                 let tileY = parseInt(GameArea.y + TILES_SIZE.height * j);
         
@@ -132,6 +132,7 @@ function init() {
             }
         
             if (clickedTile) { // 選択できるか条件
+                console.log("clikced!");
                 // 選択解除
                 if (clickedTile === firstSelectedTile) {
                     firstSelectedTile = null;
