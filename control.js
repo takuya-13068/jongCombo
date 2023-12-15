@@ -5,7 +5,6 @@ function compareFunc(a, b) {
     return a - b;
 }
 
-
 function drawTiles() {
     ctx2d.fillStyle = COLSET['green'];
     ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
@@ -54,7 +53,7 @@ function createField() {
 }
 
 function loadButtons(){
-    for (i = 0; i < buttonList.length; i++){
+    for (var i = 0; i < buttonList.length; i++){
         imageFiles[buttonList[i]] = new Image();
         imageFiles[buttonList[i]].src = './assets/img/button_' + buttonList[i]  + '.png';
         imageFiles[buttonList[i]].onload = function(){
@@ -63,7 +62,7 @@ function loadButtons(){
     }
 }
 function loadOtherImages(){
-    for (i = 0; i < otherImagesList.length; i++){
+    for (var i = 0; i < otherImagesList.length; i++){
         imageFiles[otherImagesList[i]] = new Image();
         imageFiles[otherImagesList[i]].src = './assets/img/' + otherImagesList[i]  + '.webp';
         imageFiles[otherImagesList[i]].onload = function(){
@@ -72,10 +71,19 @@ function loadOtherImages(){
     }
 }
 function loadText(){
-    for (i = 0; i < textImageList.length; i++){
+    for (var i = 0; i < textImageList.length; i++){
         imageFiles[textImageList[i]] = new Image();
         imageFiles[textImageList[i]].src = './assets/text/' + textImageList[i]  + '.webp';
         imageFiles[textImageList[i]].onload = function(){
+            loadedImgCnt++;
+        }
+    }
+}
+function loadAnimation(){
+    for (var i = 0; i < animationImagesList.length; i++){
+        imageFiles[animationImagesList[i].id] = new Image();
+        imageFiles[animationImagesList[i].id].src = './assets/animation/' + animationImagesList[i].id  + '.webp';
+        imageFiles[animationImagesList[i].id].onload = function(){
             loadedImgCnt++;
         }
     }
