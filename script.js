@@ -122,10 +122,9 @@ function init() {
     loadText();
     loadAnimation();
 
-    /*
     
     canvas.addEventListener('touchstart', function(e) {
-        e.preventDefault();
+        //e.preventDefault();
         let touch = e.touches[0];
         touchStartX = touch.clientX;
         touchStartY = touch.clientY;
@@ -153,10 +152,11 @@ function init() {
     }, { passive: false });
     
     canvas.addEventListener('touchend', function(e) {
-        e.preventDefault();
+        //e.preventDefault();
         resetSelection();
     }, { passive: false });
-    */
+    
+
 
     canvas.addEventListener('click', function(event) {
         // クリックされた座標を取得
@@ -171,7 +171,8 @@ function init() {
             checkClickOfTitleObj(x, y);
         } else if(mode === 2){
             checkClickOfResultObj(x, y);
-        } else if (mode === 1) {
+        } /*
+        else if (mode === 1) {
             let clickedTile = null;
             let canSelect = true; // タイルが選択可能かどうかのフラグ
         
@@ -211,7 +212,7 @@ function init() {
                 console.log("Selected Tile:", clickedTile); // 選択したタイルの情報を出力
                 drawTiles(); // タイルを再描画
             }
-        }
+        } */
     });
 
     setMode(-1);
