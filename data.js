@@ -6,10 +6,11 @@ const TIME_MAX = 100; // ゲーム時間（秒）
 
 const buttonList = ['start', 'entry', 'retry']; // img内に'button_XXX' のファイルを用意する
 const otherImagesList = ['logo', 'howto']; // img内に'XX.webp'のファイルを用意する
-const animationImagesList = [{id:'explosion', w:5, h:3}]
+const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
 const menuButtonHeight = 90;
 const titleLogoHeight = 280;
+const tileEffectSize = 200;
 
 const score = [100,200,400,800];
 
@@ -161,5 +162,28 @@ class ScoreBoard extends MyImage{
         for (var i = 0; i < String(drawScore).length; i++){
             ctx2d.drawImage(imageFiles[String(drawScore)[i]], (this.x + this.w / 2) + i * this.w * this.drawScale / 4 - String(drawScore).length * this.w * this.drawScale / 8, this.y + (1 - this.drawScale) * this.h / 2, this.w * this.drawScale / 4, this.h * this.drawScale);
         }
+    }
+}
+
+class MyAnimation extends MyImage{
+    constructor (kindNum, x, y, size, maxT){
+        super(animationImagesList[kindNum].id, x, y, size);
+        this.initialT = t;
+        this.maxT = maxT;
+        this.kindNum = kindNum;
+        this.w = this.h * (imageFiles[animationImagesList[kindNum].id].width / animationImagesList[kindNum].cntW) / (imageFiles[animationImagesList[kindNum].id].height / animationImagesList[kindNum].cntH);
+    }
+    draw(){
+        if(this.initialT < t && t < this.initialT + this.maxT){
+            var cnt = Math.floor((t - this.initialT) / this.maxT * animationImagesList[this.kindNum].maxCnt);
+            var sw = imageFiles[animationImagesList[this.kindNum].id].width / animationImagesList[this.kindNum].cntW;
+            var sh = imageFiles[animationImagesList[this.kindNum].id].height / animationImagesList[this.kindNum].cntH;
+            var sx = (cnt % animationImagesList[this.kindNum].cntW) * sw;
+            var sy = Math.floor(cnt / animationImagesList[this.kindNum].cntW) * sh;
+            ctx2d.drawImage(imageFiles[animationImagesList[this.kindNum].id], sx, sy, sw, sh, this.x, this.y, this.w, this.h);   
+        }
+    }
+    isOver(){
+        return (t > this.initialT + this.maxT);
     }
 }
