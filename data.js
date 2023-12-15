@@ -19,16 +19,18 @@ const COMBO_MAX_TIME = 5;
 const score = [100,200,400,800];
 
 /*役スコア
-1飜: タンヤオ, ドラ, 一盃口
-2飜: トイトイ, 三暗刻, 小三元, 一気通貫
+1飜: 立直, タンヤオ, ドラ, 一盃口
+2飜: 三暗刻, 小三元, 一気通貫
 3飜: 混一色, 二盃口
 6飜: 清一色
-役満: 大三元
+役満: 大三元, 四暗刻
 */
-const role = {"All Simples": 1, "Double-Run": 1, "Value Tiles": 1, 
-        "All Triples": 2, "Full straight": 2, "Little Dragons": 2, 
-        "Half Flush": 3, "2 Double Runs": 3, "Full Flush": 6, "Big Dragons": 13
+const role = {"Reach": 1, "All Simples": 1, "Double-Run": 1, "Value Tiles": 1, 
+        "Three Triples": 2, "Full straight": 2, "Little Dragons": 2, 
+        "Half Flush": 3, "2 Double Runs": 3, "Full Flush": 6, 
+        "Big Dragons": 13, "Four Triples": 13
     };
+const role_score = {1:1000, 2:2000, 3:4000, 4:8000, 5:8000, 6:12000, 7:12000, 8:16000, 9:16000, 10:16000, 11:24000, 12:24000, 13:32000};
 
 //麻雀牌
 const TILES_SIZE = {width: 100, height: HEIGHT * 3/5 /6, row:7, column: 6}; // 7*6
