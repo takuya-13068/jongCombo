@@ -10,7 +10,8 @@ const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
 const menuButtonHeight = 90;
 const titleLogoHeight = 280;
-const tileEffectSize = 200;
+const tileEffectSize = 120;
+const ScoreBoardLoop = 10;
 
 const score = [100,200,400,800];
 
@@ -142,14 +143,14 @@ class ScoreBoard extends MyImage{
         // 常に横幅は4文字分確保しておく
         this.x-=this.w * 1.5;
         this.w*=4;
-        this.scoreTransitionPerIter = 3;
         this.drawScale = 1;
     }
     freshScore(){
-        if(this.score > gameData.score + this.scoreTransitionPerIter){
-            this.score-=this.scoreTransitionPerIter;
-        } else if(this.score < gameData.score - this.scoreTransitionPerIter){
-            this.score+=this.scoreTransitionPerIter;
+        var scoreTransitionPerIter = Math.max(2, Math.abs(this.score - gameData.score) / ScoreBoardLoop);
+        if(this.score > gameData.score + scoreTransitionPerIter){
+            this.score-=scoreTransitionPerIter;
+        } else if(this.score < gameData.score - scoreTransitionPerIter){
+            this.score+=scoreTransitionPerIter;
         } else {
             this.score = gameData.score;
         }
