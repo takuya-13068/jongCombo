@@ -52,8 +52,7 @@ class Tile {
     } 
 
     draw() {
-        this.x = 0.9 * this.x + 0.1 * this.towardX;
-        this.y = 0.9 * this.y + 0.1 * this.towardY;
+        this.x = this.towardX;
         if (this.y + this.verticalV + 1< this.towardY){
             this.y+=this.verticalV;
             this.verticalV++;
