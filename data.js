@@ -2,11 +2,11 @@ const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
 const COLSET = {green: '#116D4E', brown:'#4E3636'};
-const TIME_MAX = 100; // ゲーム時間（秒）
+const TIME_MAX = 60; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.55;
 
 const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'button_XXX' のファイルを用意する
-const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full']; // img内に'XX.webp'のファイルを用意する
+const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 'value_tiles', 'all_simples', 'reach', 'double_run']; // img内に'XX.webp'のファイルを用意する
 const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
 const menuButtonHeight = 90;
@@ -25,10 +25,10 @@ const score = [100,200,400,800];
 6飜: 清一色
 役満: 大三元, 四暗刻
 */
-const role = {"Reach": 1, "All Simples": 1, "Double-Run": 1, "Value Tiles": 1, 
-        "Three Triples": 2, "Full straight": 2, "Little Dragons": 2, 
-        "Half Flush": 3, "2 Double Runs": 3, "Full Flush": 6, 
-        "Big Dragons": 13, "Four Triples": 13
+const role = {"Reach": {han:1, fileName:'reach'}, "All Simples": {han:1, fileName:'all_simples'}, "Double-Run": {han:1, fileName:'double_run'}, "Value Tiles": {han:1, fileName:'value_tiles'}, 
+        "Three Triples": {han:2}, "Full straight": {han:2}, "Little Dragons": {han:2}, 
+        "Half Flush": {han:3}, "2 Double Runs": {han:3}, "Full Flush": {han:6}, 
+        "Big Dragons": {han:13}, "Four Triples": {han:13}
     };
 const role_score = {1:1000, 2:2000, 3:4000, 4:8000, 5:8000, 6:12000, 7:12000, 8:16000, 9:16000, 10:16000, 11:24000, 12:24000, 13:32000};
 
@@ -161,6 +161,17 @@ class Timer extends MyImage{
     draw(){
         var sec = Math.floor(TIME_MAX - (performance.now() - gameData.gameStartTime)/1000);
         var s = [0,0];
+        var myRad = this.h * 0.65;
+        ctx2d.fillStyle = "#dddd";
+        ctx2d.beginPath();
+        ctx2d.moveTo(this.x + this.w / 2, this.y + this.h / 2);
+        ctx2d.arc(this.x + this.w / 2, this.y + this.h / 2, myRad, 0, Math.PI * 2);
+        ctx2d.fill();
+        ctx2d.fillStyle = "#f80f";
+        ctx2d.beginPath();
+        ctx2d.moveTo(this.x + this.w / 2, this.y + this.h / 2);
+        ctx2d.arc(this.x + this.w / 2, this.y + this.h / 2, myRad, -Math.PI * 0.5, -Math.PI * 0.5 - Math.PI * 2 * sec / TIME_MAX, true);
+        ctx2d.fill();
         s[0] = (sec - sec % 10) / 10;
         sec-=s[0]*10;
         s[1] = Math.max(0, sec);
