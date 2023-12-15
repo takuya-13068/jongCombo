@@ -120,10 +120,12 @@ function setMode(nextMode){
         titleObjList.push(new MyImage('howto', 'center', HEIGHT*0.7, titleLogoHeight));
     } else if(nextMode == 1){
         startGame();
+        mainBGM.play();
     } else if (nextMode == 2){
         // リザルト画面に遷移するとき
         resultObjList.push(new Button('retry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2 - menuButtonHeight * 1.2, menuButtonHeight));
         resultObjList.push(new Button('entry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
+        mainBGM.stop();
     }
     mode = nextMode;
 }

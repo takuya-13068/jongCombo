@@ -51,10 +51,13 @@ function touchMoveEvent(){
         if (currentTile) {
             if (!firstSelectedTile) {
                 firstSelectedTile = currentTile;
+                select.play();
             } else if (!secondSelectedTile && currentTile !== firstSelectedTile && ValidateSecondTile(firstSelectedTile, currentTile, reachMode)) {
                 secondSelectedTile = currentTile;
+                select.play();
             } else if (secondSelectedTile && currentTile !== firstSelectedTile && currentTile !== secondSelectedTile && ValidateThirdTile(firstSelectedTile, secondSelectedTile, currentTile)) {
                 thirdSelectedTile = currentTile;
+                select.play();
             }
             drawTiles(); // タイルを再描画
         }
