@@ -223,8 +223,18 @@ function getTilePosFromIndex(tileIndex){
 function removeSelectedTiles() {
     // 選択されたタイルの情報を取得, 配列に追加
     let selectedTiles = [firstSelectedTile, secondSelectedTile, thirdSelectedTile];
+
     selectedTiles.sort((a, b) => a.value - b.value);
-    removedTiles.push(...selectedTiles);
+    
+    for(var i = 0; i < selectedTiles.length; i++){
+        let displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
+        let displayY = GameArea.y - 100; // GameAreaの少し上
+        tile = selectedTiles[i];
+        gameObjList.push(new GroupTile(tile.kind, tile.value, displayX, displayY));
+        gameObjList[gameObjList.length-1].x = tile.x;
+        gameObjList[gameObjList.length-1].y = tile.y;
+        removedTiles.push(selectedTiles[selectedTiles.length-3+i]);
+    }
 
     // Score
     updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile);
@@ -256,16 +266,6 @@ function removeSelectedTiles() {
     resetSelection();
 }
 
-function displayRemovedTiles() {
-    let displayAreaHeight = HEIGHT * 1 / 10; // 上部の表示エリアの高さ
-
-    removedTiles.forEach((tile, index) => {
-        let displayX = index * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
-        let displayY = GameArea.y - displayAreaHeight - 10; // GameAreaの少し上
-        ctx2d.drawImage(tile.pic, displayX, displayY, TILES_SIZE.width * COMBO_TILE_SIZE_SCALE, TILES_SIZE.height * COMBO_TILE_SIZE_SCALE); // サイズを半分にして表示
-    });
-}
-
 function resetSelection() {
     firstSelectedTile = null;
     secondSelectedTile = null;
@@ -289,7 +289,7 @@ function updateScore(firstSelectedTile, secondSelectedTile, thirdSelectedTile){
         combo += 1;
         gameData.score += 100 * (2 ** (combo - 1));
         combostart = performance.now() - initialPfnw;
-        comboLimitTime = 5.0;
+        comboLimitTime = COMBO_MAX_TIME;
         if(combo === 4) reachMode = true;
     }
 
