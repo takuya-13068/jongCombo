@@ -2,6 +2,8 @@ let tiles = []; // ここにタイルの情報を格納する
 let imagesLoaded = 0; // 読み込まれた画像の数
 
 function drawTiles() {
+    ctx2d.clearRect(GameArea.x, GameArea.y, WIDTH, HEIGHT); // キャンバスをクリア
+
     ctx2d.fillStyle = COLSET['green'];
     ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
     for (let tile of tiles) {
@@ -10,7 +12,7 @@ function drawTiles() {
         let tileX = parseInt(GameArea.x + TILES_SIZE.width * i);
         let tileY = parseInt(GameArea.y + TILES_SIZE.height * j);
         
-        ctx2d.drawImage(tile.pic, tileX, tileY, TILES_SIZE.width, TILES_SIZE.height);
+        tile.draw(ctx2d, tileX, tileY); // Tileクラスのdrawメソッドを使ってタイルを描画
 
         if (tile === firstSelectedTile || tile === secondSelectedTile || tile === thirdSelectedTile) {
             ctx2d.fillStyle = 'rgba(135, 206, 235, 0.5)';
@@ -69,6 +71,22 @@ function loadText(){
         }
     }
 }
+
+function loadTileImages() {
+    for (let kind in FILE_NAME_MAP) {
+        let maxTiles = kind === 'jihai' ? 7 : 9; // 'jihai' の場合は7まで、それ以外は9まで
+        for (let i = 1; i <= maxTiles; i++) {
+            let imageName = FILE_NAME_MAP[kind] + i + '_1';
+            imageFiles.tiles[imageName] = new Image();
+            imageFiles.tiles[imageName].src = './assets/img/' + imageName + '.gif';
+            imageFiles.tiles[imageName].onload = function() {
+                loadedImgCnt++;
+            };
+        }
+    }
+}
+
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
@@ -94,8 +112,8 @@ function CreateTile(){
 
 
 function ValidateSecondTile(selectedTile, newTile) {
-    console.log("Selected Tile:", selectedTile);
-    console.log("New Tile:", newTile);
+    //console.log("Selected Tile:", selectedTile);
+    //console.log("New Tile:", newTile);
 
     let firstTileIndex = tiles.indexOf(firstSelectedTile);
     let newTileIndex = tiles.indexOf(newTile);
@@ -134,9 +152,9 @@ function compareFunc(a, b) {
   }
 
 function ValidateThirdTile(firstSelectedTile, secondSelectedTile, newTile) {
-    console.log("First Selected Tile:", firstSelectedTile);
-    console.log("Second Selected Tile:", secondSelectedTile);
-    console.log("New Tile:", newTile);
+    //console.log("First Selected Tile:", firstSelectedTile);
+    //console.log("Second Selected Tile:", secondSelectedTile);
+    //console.log("New Tile:", newTile);
 
     let newTileIndex = tiles.indexOf(newTile);
     
@@ -248,9 +266,6 @@ function dropTiles(firstTileIndex, secondTileIndex, thirdTileIndex) {
 
 
 
-
-
-
 function addNewTiles(columnsToAdd) {
     columnsToAdd.forEach(columnIndex => {
         for (let j = 0; j < 3; j++) { // 空いた3マス分のタイルを追加
@@ -262,9 +277,43 @@ function addNewTiles(columnsToAdd) {
     });
 }
 
+function moveTileDown(tileIndex) {
+    if (tileIndex < 6) {
+        // 上のタイルがない場合は、新しいタイルを生成
+        tiles[tileIndex] = CreateTile();
+    } else {
+        // 上のタイルを現在の位置に移動
+        tiles[tileIndex] = tiles[tileIndex - 6];
+    }
+}
+
+function removeSelectedTiles() {
+    // 選択されたタイルのインデックスを取得
+    let selectedTileIndices = [tiles.indexOf(firstSelectedTile), tiles.indexOf(secondSelectedTile), tiles.indexOf(thirdSelectedTile)];
+    selectedTileIndices = selectedTileIndices.sort(compareFunc);
+
+    // 重複を排除
+    selectedTileIndices = [...new Set(selectedTileIndices)];
+
+    // タイルを削除し、必要なタイルを移動
+    selectedTileIndices.forEach(tileIndex => {
+        while (tileIndex >= 6) {
+            moveTileDown(tileIndex);
+            tileIndex -= 6;
+        }
+        // 最上部のタイルを新規生成
+        moveTileDown(tileIndex);
+    });
+
+    // タイルの再描画
+    drawTiles();
+
+    // 選択状態のリセット
+    resetSelection();
+}
 
 
-
+/*
 function removeSelectedTiles() {
     // 選択されたタイルのインデックスを取得
     let firstTileIndex = tiles.indexOf(firstSelectedTile);
@@ -281,6 +330,7 @@ function removeSelectedTiles() {
     // 消されたタイルを記録
     removedTiles.push(firstSelectedTile, secondSelectedTile, thirdSelectedTile);
 }
+*/
 
 
 function displayRemovedTiles() {
