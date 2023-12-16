@@ -239,7 +239,8 @@ function updateScore(){
         comboLimitTime = COMBO_MAX_TIME;
         if(combo === 4) {
             reachMode = true;
-            gameObjList.push(new MyRichImage('reach', 'center', HEIGHT/2-50, 100, 1, 1000, 0));
+            gameObjList.push(new MyRichImage('reach_1', WIDTH /2 - 110 - 120, HEIGHT/2+20, 240, 8, 1000, 0));
+            gameObjList.push(new MyRichImage('reach_2', WIDTH /2 + 110 - 120, HEIGHT/2+20, 240, 8, 1000, 300));
         }
     }
 
@@ -357,8 +358,13 @@ function calculateRole(){
 
     // エフェクトここから
     console.log(role_set);
+    var roleEffectSize = ROLE_EFFECT_SIZE_BASE / Math.max(4, role_set.length + 1);
     for(var i = 0; i < role_set.length; i++){
         console.log(role_set[i], role[role_set[i]]);
-        gameObjList.push(new MyRichImage(role[role_set[i]].fileName, WIDTH-200, 50 * i + 250, 40, 2, 1000, i * 500));
+        gameObjList.push(new MyRichImage(role[role_set[i]].fileName, WIDTH/2 - roleEffectSize * 300 / 120 / 2, HEIGHT/2 + i * roleEffectSize * 0.8, roleEffectSize, 9, 750, i * 300));
     }
+    var displayHan = han;
+    if(imageFiles[displayHan] === null) displayHan = '9';
+    gameObjList.push(new MyRichImage(displayHan, WIDTH/2 - 50, HEIGHT/2 + role_set.length * roleEffectSize * 0.8, roleEffectSize, 9, 750, role_set.length * 300));
+    gameObjList.push(new MyRichImage('han', WIDTH/2 + 50, HEIGHT/2 + role_set.length * roleEffectSize * 0.8, roleEffectSize, 9, 750, role_set.length * 300));
 }
