@@ -5,7 +5,7 @@ const COLSET = {green: '#116D4E', brown:'#4E3636'};
 const TIME_MAX = 60; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.55;
 
-const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'button_XXX' のファイルを用意する
+const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'button_XXX.png' のファイルを用意する
 const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 'value_tiles', 'all_simples', 'reach', 'double_run']; // img内に'XX.webp'のファイルを用意する
 const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
@@ -105,6 +105,7 @@ class MyImage{
         this.h = size;
         this.w = size / imageFiles[kind].height * imageFiles[kind].width;
         this.wave = false;
+        this.scale = 1;
         if(this.x == 'center'){
             this.x = (WIDTH - this.w)/2;
         }
@@ -119,7 +120,7 @@ class MyImage{
             ctx2d.fillStyle="#00000060";
             ctx2d.fillRect(this.x+5, drawy+5, this.w, this.h);
         }    
-        ctx2d.drawImage(imageFiles[this.kind], this.x, drawy, this.w, this.h);
+        ctx2d.drawImage(imageFiles[this.kind], this.x + this.w * (1 - this.scale) / 2, drawy + this.h * (1 - this.scale) / 2, this.w * this.scale, this.h * this.scale);
     }
 }
 
@@ -156,7 +157,6 @@ class Button extends MyImage{
 class Timer extends MyImage{
     constructor(x, y, size){
         super('1', x, y, size);
-        this.w = size / 8 * 5 * 2;
     }
     draw(){
         var sec = Math.floor(TIME_MAX - (performance.now() - gameData.gameStartTime)/1000);
@@ -179,7 +179,7 @@ class Timer extends MyImage{
             if(imageFiles[s[i]] == null) {
                 s[i] = '0';
             }
-            ctx2d.drawImage(imageFiles[s[i]], this.x + i * this.w / 2, this.y, this.w / 2, this.h);
+            ctx2d.drawImage(imageFiles[s[i]], this.x + this.h/4+ (i-1) * this.w * 0.75, this.y, this.w, this.h);
         }  
     }
 }
@@ -188,7 +188,7 @@ class ScoreBoard extends MyImage{
         super('1', x, y, size);
         this.score = gameData.score;
         // 常に横幅は5文字分確保しておく
-        this.x-=this.w * 2.5;
+        this.x+=this.w * 0.5;
         this.w*=5;
         this.drawScale = 1;
     }
@@ -207,7 +207,7 @@ class ScoreBoard extends MyImage{
         this.freshScore();
         var drawScore = Math.round(Math.min(99999, Math.max(0, this.score)));
         for (var i = 0; i < String(drawScore).length; i++){
-            ctx2d.drawImage(imageFiles[String(drawScore)[i]], (this.x + this.w / 2) + i * this.w * this.drawScale / 4 - String(drawScore).length * this.w * this.drawScale / 8, this.y + (1 - this.drawScale) * this.h / 2, this.w * this.drawScale / 4, this.h * this.drawScale);
+            ctx2d.drawImage(imageFiles[String(drawScore)[i]], (this.x) + (i-String(drawScore).length/2) * this.w * 0.7 * this.drawScale / 5, this.y + (1 - this.drawScale) * this.h / 2, this.w * this.drawScale / 4, this.h * this.drawScale);
         }
     }
 }
@@ -244,7 +244,7 @@ class MyRichImage extends MyImage{
     }
     draw(){
         if(this.animationKind == 2){
-            
+            this.scale = 1 + 1 - ((t - this.initialTime) / this.time);
         }
         if(performance.now() > this.initialTime && performance.now() - this.initialTime < this.time){
             super.draw();
