@@ -48,8 +48,11 @@ window.addEventListener('DOMContentLoaded', function(e){ ///キー入力イベ�
 
 function drawTitle(){//タイトル画面の描画
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-    ctx2d.fillStyle = COLSET['green'];
-    ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
+    drawX = (t/24 % WIDTH);
+    ctx2d.drawImage(imageFiles['top_back'], drawX, 0, WIDTH, HEIGHT);
+    ctx2d.drawImage(imageFiles['top_back'], drawX+1 - WIDTH, 0, WIDTH, HEIGHT);
+    ctx2d.fillStyle="#C6C6C6BB";
+    ctx2d.fillRect(0, HEIGHT*0.2, WIDTH,HEIGHT*0.28);
     for(var i = 0; i < titleObjList.length; i++){
         titleObjList[i].draw();
     }
@@ -120,9 +123,13 @@ function setMode(nextMode){
     }else if(nextMode == 0){
         // ゲーム開始画面へ遷移するとき
         titleObjList = [];
-        titleObjList.push(new MyImage('logo', 'center', HEIGHT*0.2, titleLogoHeight));
-        titleObjList.push(new Button('start', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), HEIGHT*0.5, menuButtonHeight));
-        titleObjList.push(new MyImage('howto', 'center', HEIGHT*0.65, titleLogoHeight));
+        titleObjList.push(new MyRichImage('top_back_2', 200, HEIGHT-498, 500, 4, Infinity, 0));
+        titleObjList.push(new MyRichImage('top_back_1', 0, HEIGHT-398, 400, 3, Infinity, 0));
+        titleObjList.push(new MyRichImage('top_back_3', 0, 0, 300, 5, Infinity, 0));
+        titleObjList.push(new MyRichImage('top_back_4', WIDTH*0.7, 0, 200, 5, Infinity, 0));
+        titleObjList.push(new MyRichImage('logo', 'center', HEIGHT*0.24, titleLogoHeight, 7, Infinity, 0));
+        titleObjList.push(new Button('start', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), HEIGHT*0.55, menuButtonHeight));
+        titleObjList.push(new MyImage('howto', 'center', HEIGHT*0.72, titleLogoHeight));
     } else if(nextMode == 1){
         startGame();
         mainBGM.play();

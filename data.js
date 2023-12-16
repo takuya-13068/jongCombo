@@ -6,15 +6,15 @@ const TIME_MAX = 60; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.55;
 
 const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'button_XXX.png' のファイルを用意する
-const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 'value_tiles', 'all_simples', 'reach', 'double_run']; // img内に'XX.webp'のファイルを用意する
+const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 'value_tiles', 'all_simples', 'reach', 'double_run', 'top_back', 'top_back_1', 'top_back_2', 'top_back_3', 'top_back_4']; // img内に'XX.webp'のファイルを用意する
 const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
-const menuButtonHeight = 90;
+const menuButtonHeight = 110;
 const titleLogoHeight = 280;
 const tileEffectSize = 120;
 const ScoreBoardLoop = 10;
 const ComboGaugeLoop = 10;
-const COMBO_MAX_TIME = 500;
+const COMBO_MAX_TIME = 5;
 
 const score = [100,200,400,800];
 
@@ -120,6 +120,10 @@ class MyImage{
             ctx2d.fillStyle="#00000060";
             ctx2d.fillRect(this.x+5, drawy+5, this.w, this.h);
         }    
+        if(this.kind == 'howto'){
+            ctx2d.fillStyle="#00000090";
+            ctx2d.fillRect(this.x+40, drawy+48, this.w - 58, this.h - 58);
+        }
         ctx2d.drawImage(imageFiles[this.kind], this.x + this.w * (1 - this.scale) / 2, drawy + this.h * (1 - this.scale) / 2, this.w * this.scale, this.h * this.scale);
     }
 }
@@ -241,10 +245,32 @@ class MyRichImage extends MyImage{
         this.animationKind = animationKind;
         this.time = time;
         this.initialTime = performance.now() + timeOffset;
+        if(this.animationKind == 3){
+            // 下から上へ登場
+            this.towardY = this.y;
+            this.y+=100;
+        } else if(this.animationKind == 4){
+            // 右から左へ登場
+            this.towardX = this.x;
+            this.x+=100;
+        } else if(this.animationKind == 5){
+            // 上から下へ登場
+            this.towardY = this.y;
+            this.y-=100;
+        } else if(this.animationKind == 7){
+            // ふわっと登場
+            this.scale = 1.5;
+        }
     }
     draw(){
         if(this.animationKind == 2){
             this.scale = 1 + 1 - ((t - this.initialTime) / this.time);
+        } else if(this.animationKind == 3 || this.animationKind == 5){
+            this.y = 0.9 * this.y + 0.1 * this.towardY;            
+        } else if(this.animationKind == 4){
+            this.x = 0.9 * this.x + 0.1 * this.towardX;
+        } else if(this.animationKind == 7){
+            this.scale = 0.8 * this.scale + 0.2 * 1;
         }
         if(performance.now() > this.initialTime && performance.now() - this.initialTime < this.time){
             super.draw();
