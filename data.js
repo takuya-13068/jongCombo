@@ -6,7 +6,10 @@ const TIME_MAX = 60; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.5;
 
 const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'button_XXX.png' のファイルを用意する
-const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 'value_tiles', 'all_simples', 'reach', 'double_run', 'top_back', 'top_back_1', 'top_back_2', 'top_back_3', 'top_back_4', 'scoreboard_back', 'timer', 'game_back', 'role_bar']; // img内に'XX.webp'のファイルを用意する
+const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 
+                        'value_tiles', 'all_simples', 'reach', 'double_run', 
+                        'top_back', 'top_back_1', 'top_back_2', 'top_back_3', 'top_back_4', 'scoreboard_back', 'timer', 'game_back', 'role_bar',
+                        'reach_1', 'reach_2']; // img内に'XX.webp'のファイルを用意する
 const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
 const menuButtonHeight = 110;
@@ -269,6 +272,9 @@ class MyRichImage extends MyImage{
             this.x = 0.9 * this.x + 0.1 * this.towardX;
         } else if(this.animationKind == 7){
             this.scale = 0.8 * this.scale + 0.2 * 1;
+        } else if(this.animationKind == 8){
+            // 立直
+            
         }
         if(performance.now() > this.initialTime && performance.now() - this.initialTime < this.time){
             super.draw();

@@ -12,8 +12,6 @@ function drawTiles() {
         let tileX = parseInt(GameArea.x + TILES_SIZE.width * i);
         let tileY = parseInt(GameArea.y + TILES_SIZE.height * j);
         
-        tile.draw(ctx2d, tileX + widthMargin/2, tileY + heightMargin/2); // Tileクラスのdrawメソッドを使ってタイルを描画
-
         tile.towardX = tileX + widthMargin/2;
         tile.towardY = tileY + heightMargin/2;
         tile.draw(); // Tileクラスのdrawメソッドを使ってタイルを描画
