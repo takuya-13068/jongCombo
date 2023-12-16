@@ -29,7 +29,7 @@ const score = [100,200,400,800];
 役満: 大三元, 四暗刻
 */
 const role = {"Reach": {han:1, fileName:'reach'}, "All Simples": {han:1, fileName:'all_simples'}, "Double-Run": {han:1, fileName:'double_run'}, "Value Tiles": {han:1, fileName:'value_tiles'}, 
-        "Three Triples": {han:2, fileName:'reach'}, "Full straight": {han:2, fileName:'reach'}, "Little Dragons": {han:2, fileName:'reach'}, 
+        "Three Triples": {han:2, fileName:'reach'}, "Full Straight": {han:2, fileName:'reach'}, "Little Dragons": {han:2, fileName:'reach'}, 
         "Half Flush": {han:3, fileName:'reach'}, "2 Double Runs": {han:3, fileName:'reach'}, "Full Flush": {han:6, fileName:'reach'}, 
         "Big Dragons": {han:13, fileName:'reach'}, "Four Triples": {han:13, fileName:'reach'}
     };
