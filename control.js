@@ -3,8 +3,8 @@ function compareFunc(a, b) {
 }
 
 function drawTiles() {
-    ctx2d.fillStyle = COLSET['green'];
-    ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx2d.fillStyle = COLSET['gray'];
+    ctx2d.fillRect(0, GameArea.y - 20, WIDTH, HEIGHT);
 
     for (let tile of tiles) {
         let i = tiles.indexOf(tile) % parseInt(GameArea.width / TILES_SIZE.width);
@@ -12,8 +12,6 @@ function drawTiles() {
         let tileX = parseInt(GameArea.x + TILES_SIZE.width * i);
         let tileY = parseInt(GameArea.y + TILES_SIZE.height * j);
         
-        tile.draw(ctx2d, tileX + widthMargin/2, tileY + heightMargin/2); // Tileクラスのdrawメソッドを使ってタイルを描画
-
         tile.towardX = tileX + widthMargin/2;
         tile.towardY = tileY + heightMargin/2;
         tile.draw(); // Tileクラスのdrawメソッドを使ってタイルを描画
@@ -176,8 +174,8 @@ function removeSelectedTiles() {
     selectedTiles.sort((a, b) => a.value - b.value);
     
     for(var i = 0; i < selectedTiles.length; i++){
-        let displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
-        let displayY = GameArea.y - 100; // GameAreaの少し上
+        let displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE + 2;
+        let displayY = GameArea.y - 87; // GameAreaの少し上
         tile = selectedTiles[i];
         gameObjList.push(new GroupTile(tile.kind, tile.value, displayX, displayY));
         gameObjList[gameObjList.length-1].x = tile.x;
