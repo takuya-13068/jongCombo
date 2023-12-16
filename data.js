@@ -1,12 +1,12 @@
 const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
-const COLSET = {green: '#116D4E', brown:'#4E3636'};
+const COLSET = {green: '#116D4E', brown:'#4E3636', gray: '#555756'};
 const TIME_MAX = 60; // ゲーム時間（秒）
-const COMBO_TILE_SIZE_SCALE = 0.55;
+const COMBO_TILE_SIZE_SCALE = 0.5;
 
 const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'button_XXX.png' のファイルを用意する
-const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 'value_tiles', 'all_simples', 'reach', 'double_run', 'top_back', 'top_back_1', 'top_back_2', 'top_back_3', 'top_back_4']; // img内に'XX.webp'のファイルを用意する
+const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 'value_tiles', 'all_simples', 'reach', 'double_run', 'top_back', 'top_back_1', 'top_back_2', 'top_back_3', 'top_back_4', 'scoreboard_back', 'timer', 'game_back', 'role_bar']; // img内に'XX.webp'のファイルを用意する
 const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
 const menuButtonHeight = 110;
@@ -163,19 +163,16 @@ class Timer extends MyImage{
         super('1', x, y, size);
     }
     draw(){
-        var sec = Math.floor(TIME_MAX - (performance.now() - gameData.gameStartTime)/1000);
+        var sec = Math.floor((performance.now() - gameData.gameStartTime)/1000);
         var s = [0,0];
         var myRad = this.h * 0.65;
-        ctx2d.fillStyle = "#dddd";
-        ctx2d.beginPath();
-        ctx2d.moveTo(this.x + this.w / 2, this.y + this.h / 2);
-        ctx2d.arc(this.x + this.w / 2, this.y + this.h / 2, myRad, 0, Math.PI * 2);
-        ctx2d.fill();
-        ctx2d.fillStyle = "#f80f";
+        ctx2d.drawImage(imageFiles['timer'], this.x - (myRad * 2 - this.w) / 2, this.y - (myRad * 2 - this.h) / 2, myRad*2, myRad*2);
+        ctx2d.fillStyle = "#666";
         ctx2d.beginPath();
         ctx2d.moveTo(this.x + this.w / 2, this.y + this.h / 2);
         ctx2d.arc(this.x + this.w / 2, this.y + this.h / 2, myRad, -Math.PI * 0.5, -Math.PI * 0.5 - Math.PI * 2 * sec / TIME_MAX, true);
         ctx2d.fill();
+        sec = TIME_MAX - sec;
         s[0] = (sec - sec % 10) / 10;
         sec-=s[0]*10;
         s[1] = Math.max(0, sec);
@@ -205,13 +202,14 @@ class ScoreBoard extends MyImage{
         } else {
             this.score = gameData.score;
         }
-        this.drawScale = 0.9 * this.drawScale + 0.1 * (1 + Math.min(0.2, Math.abs(this.score - gameData.score) * 0.01));
+        this.drawScale = (1 + Math.min(0.3, Math.abs(this.score - gameData.score) * 0.05));
     }
     draw(){
         this.freshScore();
         var drawScore = Math.round(Math.min(99999, Math.max(0, this.score)));
+        ctx2d.drawImage(imageFiles['scoreboard_back'], (this.x) - 5/2* this.w / 5 * 1.1, this.y - this.h * 0.1 / 2, this.w * 1.1, this.h * 1.1);
         for (var i = 0; i < String(drawScore).length; i++){
-            ctx2d.drawImage(imageFiles[String(drawScore)[i]], (this.x) + (i-String(drawScore).length/2) * this.w * 0.7 * this.drawScale / 5, this.y + (1 - this.drawScale) * this.h / 2, this.w * this.drawScale / 4, this.h * this.drawScale);
+            ctx2d.drawImage(imageFiles[String(drawScore)[i]], (this.x) + (i-String(drawScore).length/2) * this.w * 0.7 * this.drawScale / 5, this.y + (1 - this.drawScale) * this.h / 2, this.w * this.drawScale / 5, this.h * this.drawScale - 5);
         }
     }
 }
