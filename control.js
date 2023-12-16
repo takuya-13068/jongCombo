@@ -298,6 +298,7 @@ function calculateRole(){
     role_set.push("Reach");
     
     //タンヤオ
+    val = true;
     if(!tiles_kind.includes("jihai") && !validateOneNine(tile_set[4][0].value)){
         for (const tiles_s of tile_set){
             if(validateOneNine(tiles_s[0].value) || validateOneNine(tiles_s[1].value) || validateOneNine(tiles_s[1].value)) {
@@ -308,7 +309,28 @@ function calculateRole(){
     }
 
     //一盃口、二盃口
-    val = true;
+    var cnt = 0;
+    var m=-1; n=-1;
+    for (let i=0; i<4; i++){
+        for(let j=i+1; j<4; j++){
+            if(cnt == 0 && !tiles_style[i] && !tiles_style[j] && tiles_kind[i] == tiles_kind[j]){ //順子で種類が同じ
+                if(tile_set[i][0] == tile_set[j][0] && tile_set[i][1] == tile_set[j][1] && tile_set[i][2] == tile_set[j][2]){
+                    cnt += 1;
+                    m=i;n=j;
+                }
+            } else if(i!=m && j!=n && !tiles_style[i] && !tiles_style[j] && tiles_kind[i] == tiles_kind[j]){
+                if(tile_set[i][0] == tile_set[j][0] && tile_set[i][1] == tile_set[j][1] && tile_set[i][2] == tile_set[j][2]) cnt +=1;
+            }
+        }
+    }
+    if(cnt == 1)role_set.push("Double-Run");
+    else if (cnt == 2) role_set.push("2 Double-Run");
+
+    //一気通貫
+    var cnt = 0;
+    for(let i=0; i<4;i++){
+        if (tile_set[i][0] == cnt*3+1 && tile_set[i][1] == cnt*3+2 && tile_set[i][2] == cnt*3+3)cnt += 1;
+    } if(cnt >=3) role_set.push("Full Straight");
 
     //混一色、清一色
     var set_kind = Array.from(new Set(tiles_kind));
@@ -316,13 +338,11 @@ function calculateRole(){
     else if(set_kind.length == 2 && set_kind.includes("jihai")) role_set.push("Half Flush");
 
     //三暗刻、四暗刻
-    val = true;
     cnt_type = tiles_style.filter(value => value === true).length;
     if(cnt_type === 4) role_set.push("Four Triples");
     else if(cnt_type === 3) role_set.push("Three Triples");
 
     // 小三元、大三元
-    val = true;
     var little = [false, false, false];
     var big = [false, false, false];
     const jud_dragon = [{kind: tiles_kind[0], value: tile_set[0][0].value}, 
