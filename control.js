@@ -211,6 +211,8 @@ function removeSelectedTiles() {
 
     // 選択状態のリセット
     resetSelection();
+
+    deleteTileCnt = -1;
 }
 
 function resetSelection() {

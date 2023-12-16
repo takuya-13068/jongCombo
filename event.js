@@ -74,23 +74,32 @@ function touchEndEvent(){
     canvas.addEventListener('touchend', function(e) {
         e.preventDefault();
         if(!secondSelectedTile){
-            const rect = canvas.getBoundingClientRect();
-            let touch = e.touches[0];
-            const touchStartX = lastTouchX - rect.left;
-            const touchStartY = lastTouchY - rect.top;
-            const   scaleWidth =  canvas.clientWidth / canvas.width,
-                    scaleHeight =  canvas.clientHeight / canvas.height;
-            const   x = Math.floor( touchStartX / scaleWidth),
-                    y = Math.floor( touchStartY / scaleHeight);
-            
-            let currentTile = getTileAtPosition(x, y);
-            deleteIndex = tiles.indexOf(currentTile);
-            while (deleteIndex >= TILES_SIZE.row) {
+            if(deleteTileCnt != -1){
+                const rect = canvas.getBoundingClientRect();
+                let touch = e.touches[0];
+                const touchStartX = lastTouchX - rect.left;
+                const touchStartY = lastTouchY - rect.top;
+                const   scaleWidth =  canvas.clientWidth / canvas.width,
+                        scaleHeight =  canvas.clientHeight / canvas.height;
+                const   x = Math.floor( touchStartX / scaleWidth),
+                        y = Math.floor( touchStartY / scaleHeight);
+                
+                let currentTile = getTileAtPosition(x, y);
+                deleteIndex = tiles.indexOf(currentTile);
+                while (deleteIndex >= TILES_SIZE.row) {
+                    moveTileDown(deleteIndex);
+                    deleteIndex -= TILES_SIZE.row;
+                }
+                // 最上部のタイルを新規生成
                 moveTileDown(deleteIndex);
-                deleteIndex -= TILES_SIZE.row;
+
+                //スコアを少し減らす
+                deleteTileCnt += 1;
+                gameData.score = Math.max(0, gameData.score - 50*deleteTileCnt);
+            } else{
+                deleteTileCnt += 1;
             }
-            // 最上部のタイルを新規生成
-            moveTileDown(deleteIndex);
+            
         }
         resetSelection();
     }, { passive: false });
