@@ -94,9 +94,11 @@ function touchEndEvent(){
                 moveTileDown(deleteIndex);
 
                 //スコアを少し減らす
-                deleteTileCnt += 1;
-                deleteflg = true;
-                gameData.score = Math.max(0, gameData.score - 50*deleteTileCnt);
+                if(currentTile != null){
+                    deleteTileCnt += 1;
+                    deleteflg = true;
+                    gameData.score = Math.max(0, gameData.score - 50*deleteTileCnt);
+                }
             } else{
                 deleteTileCnt += 1;
                 deleteflg = true;
