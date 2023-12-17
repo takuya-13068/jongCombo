@@ -37,6 +37,14 @@ let lastTouchY = 0;
 let deleteTileCnt = 0;
 let deleteflg = false;
 
+function adjustViewportHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+window.addEventListener('resize', adjustViewportHeight);
+adjustViewportHeight();
+
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(e){ ///キー入力イベントを登録
     window.addEventListener("keydown", function(e){
