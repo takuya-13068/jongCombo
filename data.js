@@ -17,19 +17,19 @@ const titleLogoHeight = 280;
 const tileEffectSize = 120;
 const ScoreBoardLoop = 10;
 const ComboGaugeLoop = 10;
-const COMBO_MAX_TIME = 5;
+const COMBO_MAX_TIME = 7;
 
 const score = [100,200,400,800];
 
 /*役スコア
 1飜: 立直, タンヤオ, ドラ, 一盃口
-2飜: 三暗刻, 小三元, 一気通貫
+2飜: 三暗刻, 小三元, 一気通貫, トイトイ
 3飜: 混一色, 二盃口
 6飜: 清一色
 役満: 大三元, 四暗刻
 */
 const role = {"Reach": {han:1, fileName:'reach'}, "All Simples": {han:1, fileName:'all_simples'}, "Double-Run": {han:1, fileName:'double_run'}, "Value Tiles": {han:1, fileName:'value_tiles'}, 
-        "Three Triples": {han:2, fileName:'reach'}, "Full Straight": {han:2, fileName:'reach'}, "Little Dragons": {han:2, fileName:'reach'}, 
+        "Three Triples": {han:2, fileName:'reach'}, "Full Straight": {han:2, fileName:'reach'}, "Little Dragons": {han:2, fileName:'reach'}, "All Triles": 2,
         "Half Flush": {han:3, fileName:'reach'}, "2 Double Runs": {han:3, fileName:'reach'}, "Full Flush": {han:6, fileName:'reach'}, 
         "Big Dragons": {han:13, fileName:'reach'}, "Four Triples": {han:13, fileName:'reach'}
     };
@@ -151,12 +151,15 @@ class Button extends MyImage{
     }
     clicked(){
         if(this.kind == 'start'){
+            startGameClick.play();
             setMode(1);
         } else if(this.kind == 'retry'){
+            startGameClick.play();
             setMode(1);
         } else if(this.kind == 'entry'){
             setMode(0);
         } else if(this.kind == 'backToHome'){
+            mainBGM.stop();
             setMode(0);
         }
     }

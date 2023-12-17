@@ -341,7 +341,11 @@ function calculateRole(){
 
     //三暗刻、四暗刻
     cnt_type = tiles_style.filter(value => value === true).length;
-    if(cnt_type === 4) role_set.push("Four Triples");
+    if(cnt_type === 4) {
+        if(!deleteflg) role_set.push("Four Triples");
+        else role_set.push("All Triples");
+    }
+
     else if(cnt_type === 3) role_set.push("Three Triples");
 
     // 小三元、大三元

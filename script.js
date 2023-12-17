@@ -34,7 +34,8 @@ let touchEndY = 0;
 
 let lastTouchX = 0;
 let lastTouchY = 0;
-var deleteTileCnt = 0;
+let deleteTileCnt = 0;
+let deleteflg = false;
 
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(e){ ///キー入力イベントを登録
@@ -90,7 +91,6 @@ function startGame() {
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
 
     resetGameStatus();
-
     
     gameObjList.push(new MyImage('game_back', 0, -HEIGHT * 0.10, HEIGHT*0.45));
     gameObjList.push(new MyImage('role_bar', 0, HEIGHT*0.325, HEIGHT*0.065));
@@ -151,7 +151,6 @@ function setMode(nextMode){
         titleObjList.push(new MyImage('howto', 'center', HEIGHT*0.72, titleLogoHeight));
     } else if(nextMode == 1){
         startGame();
-        mainBGM.play();
     } else if (nextMode == 2){
         // リザルト画面に遷移するとき
         resultObjList.push(new Button('backToHome', 30, 30, 70));
@@ -182,6 +181,7 @@ function tick() {
                     return v.constructor.name != 'GroupTile';
                 })
                 reachMode = false;
+                deleteflg = false;
             }
         }
         if (reachMode){ //雀頭選択立直モード
