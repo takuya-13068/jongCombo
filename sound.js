@@ -91,6 +91,6 @@ const gameStop = new Howl({
     src      : ['./assets/sound/stop.mp3'],
     autoplay : false,
     loop     : false,
-    volume   : 1.0,
+    volume   : 0.4,
     rate     : 1.0,
 });
