@@ -2,7 +2,7 @@ const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
 const COLSET = {green: '#116D4E', brown:'#4E3636', gray: '#555756', yellow: '#FAC62C'};
-const TIME_MAX = 6; // ゲーム時間（秒）
+const TIME_MAX = 60; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.5;
 
 const buttonList = ['start', 'entry', 'retry', 'backToHome', 'backToTopForResult']; // img内に'button_XXX.png' のファイルを用意する
