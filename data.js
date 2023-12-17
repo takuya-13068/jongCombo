@@ -1,7 +1,7 @@
 const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
-const COLSET = {green: '#116D4E', brown:'#4E3636', gray: '#555756'};
+const COLSET = {green: '#116D4E', brown:'#4E3636', gray: '#555756', yellow: '#FAC62C'};
 const TIME_MAX = 60; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.5;
 
@@ -9,15 +9,17 @@ const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'butto
 const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 
                         'value_tiles', 'all_simples', 'reach', 'double_run', 'three_triples', 'full_straight', 'little_dragons', 'half_flush', '2_double_runs', 'full_flush', 'big_dragons', 'four_triples',
                         'top_back', 'top_back_1', 'top_back_2', 'top_back_3', 'top_back_4', 'scoreboard_back', 'timer', 'game_back', 'role_bar',
-                        'reach_1', 'reach_2']; // img内に'XX.webp'のファイルを用意する
-const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
-const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo', 'han', 'plus'];
+                        'reach_1', 'reach_2', 'agari_1', 'agari_2', 'gauge_vertical']; // img内に'XX.webp'のファイルを用意する
+const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}, {id:'explosion_big', cntW:6, cntH:12, maxCnt : 72},
+                            {id:'thunder', cntW:7, cntH:9, maxCnt:63},]
+const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo', 'han', 'plus', 
+                        '0_kanji','1_kanji','2_kanji','3_kanji','4_kanji','5_kanji','6_kanji','7_kanji','8_kanji','9_kanji'];
 const menuButtonHeight = 110;
 const titleLogoHeight = 280;
 const tileEffectSize = 120;
 const ScoreBoardLoop = 10;
 const ComboGaugeLoop = 10;
-const COMBO_MAX_TIME = 5;
+const COMBO_MAX_TIME = 50;
 const ROLE_EFFECT_SIZE_BASE = HEIGHT*0.3;
 
 const score = [100,200,400,800];

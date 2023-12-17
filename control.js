@@ -5,6 +5,13 @@ function compareFunc(a, b) {
 function drawTiles() {
     ctx2d.fillStyle = COLSET['gray'];
     ctx2d.fillRect(0, GameArea.y - 20, WIDTH, HEIGHT);
+    ctx2d.fillStyle = COLSET['yellow'];
+    var myHeight = (HEIGHT - GameArea.y) * (comboLimitTime / COMBO_MAX_TIME);
+    var myWidth = 10;
+    if(myHeight > 1){
+        ctx2d.drawImage(imageFiles['gauge_vertical'], 0, HEIGHT - myHeight, myWidth, myHeight);
+        ctx2d.drawImage(imageFiles['gauge_vertical'], WIDTH - myWidth, HEIGHT - myHeight, myWidth, myHeight);    
+    }
 
     for (let tile of tiles) {
         let i = tiles.indexOf(tile) % parseInt(GameArea.width / TILES_SIZE.width);
@@ -239,13 +246,15 @@ function updateScore(){
         comboLimitTime = COMBO_MAX_TIME;
         if(combo === 4) {
             reachMode = true;
-            gameObjList.push(new MyRichImage('reach_1', WIDTH /2 - 110 - 120, HEIGHT/2+20, 240, 8, 1000, 0));
-            gameObjList.push(new MyRichImage('reach_2', WIDTH /2 + 110 - 120, HEIGHT/2+20, 240, 8, 1000, 300));
+            gameObjList.push(new MyRichImage('reach_1', WIDTH /2 - 80 - 120, HEIGHT/2+100, 200, 8, 1000, 0));
+            gameObjList.push(new MyRichImage('reach_2', WIDTH /2 + 80 - 120, HEIGHT/2+100, 200, 8, 1000, 300));
         }
-    }
-
-    // calculate role point
-    else if(reachMode){
+        averagedX = (firstSelectedTile.x + secondSelectedTile.x + thirdSelectedTile.x)/3
+        averagedY = (firstSelectedTile.y + secondSelectedTile.y + thirdSelectedTile.y)/3
+        console.log(averagedX, averagedY);
+        gameObjList.push(new MyRichImage(combo + '_kanji', averagedX - 30, averagedY, 60, 8, 500, 0));
+        gameObjList.push(new MyRichImage('combo', averagedX+0, averagedY, 60, 8, 500, 0));
+    } else if(reachMode){ // calculate role point
         // 役成立
         removedTiles.push(firstSelectedTile, secondSelectedTile);
         let displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
@@ -253,6 +262,12 @@ function updateScore(){
         gameObjList.push(new GroupTile(firstSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
         displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
         gameObjList.push(new GroupTile(secondSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
+
+        gameObjList.push(new MyAnimation(2, -WIDTH * 0.4, HEIGHT/2 - 100, WIDTH, 3000));
+        gameObjList.push(new MyAnimation(2, -WIDTH * 0.1, HEIGHT/2 - 300, WIDTH * 1.8, 2000));
+    
+        gameObjList.push(new MyRichImage('agari_1', WIDTH /2 - 100 - 120, HEIGHT/2+90, 250, 8, 1000, 0));
+        gameObjList.push(new MyRichImage('agari_2', WIDTH /2 + 100 - 120, HEIGHT/2+90, 250, 8, 1000, 300));
 
         calculateRole();
 
