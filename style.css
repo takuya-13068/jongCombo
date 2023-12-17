@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    height: 100vh;
+    height: 100%;
     width: 100vw;
     display: flex;
     flex-direction: column;
@@ -11,6 +11,7 @@ body {
     background-repeat: repeat;
     background-size: 600px;
 }
+
 a{
     transition: all 0.3s;
 }

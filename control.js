@@ -361,9 +361,7 @@ function calculateRole(){
     if(cnt_type === 4) {
         if(!deleteflg) role_set.push("Four Triples");
         else role_set.push("All Triples");
-    }
-
-    else if(cnt_type === 3) role_set.push("Three Triples");
+    } else if(cnt_type === 3 && !deleteflg) role_set.push("Three Triples");
 
     // 小三元、大三元
     var little = [false, false, false];
