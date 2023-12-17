@@ -188,9 +188,11 @@ function tick() {
         }
         if (reachMode){ //雀頭選択立直モード
             if(secondSelectedTile != null){
+                getRole.play();
                 updateScore();
             }
         } else if (thirdSelectedTile != null) {
+            getSet.play();
             removeSelectedTiles();
             resetSelection();
         }
