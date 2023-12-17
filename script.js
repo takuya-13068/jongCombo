@@ -88,15 +88,33 @@ function startGame() {
     createField();
     fieldCreated = true;
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-    gameData.gameStartTime = performance.now(); // ゲーム開始時間を記録
-    gameData.score = 0;
-    gameObjList = [];
+
+    resetGameStatus();
+
+    
     gameObjList.push(new MyImage('game_back', 0, -HEIGHT * 0.10, HEIGHT*0.45));
     gameObjList.push(new MyImage('role_bar', 0, HEIGHT*0.325, HEIGHT*0.065));
     gameObjList.push(new Button('backToHome', 30, 30, 70));
     gameObjList.push(new Timer(WIDTH*0.86, 30, HEIGHT*0.06));
     gameObjList.push(new ScoreBoard('center', 140, HEIGHT*0.12));
     gameObjList.push(new ComboGauge('center', 280, HEIGHT*0.1));
+
+}
+
+function resetGameStatus(){
+    gameData.gameStartTime = performance.now(); // ゲーム開始時間を記録
+    gameData.score = 0;
+    gameObjList = [];
+    combo = 0;
+    comboLimitTime = 0;
+    reachMode = false;
+    deleteTileCnt = 0;
+
+    selectedTile = null;
+    firstSelectedTile = null; // 最初に選択されたタイルを追跡する変数
+    secondSelectedTile = null; // 2番目に選択されたタイルを追跡する変数
+    thirdSelectedTile = null;
+    removedTiles = [];
 }
 
 
