@@ -265,11 +265,11 @@ function updateScore(){
         displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
         gameObjList.push(new GroupTile(secondSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
 
-        gameObjList.push(new MyAnimation(2, -WIDTH * 0.4, HEIGHT/2 - 100, WIDTH, 3000));
-        gameObjList.push(new MyAnimation(2, -WIDTH * 0.1, HEIGHT/2 - 300, WIDTH * 1.8, 2000));
+        gameObjList.push(new MyAnimation(1, -WIDTH * 0.4, HEIGHT/2 - 100, WIDTH, 3000));
+        gameObjList.push(new MyAnimation(1, -WIDTH * 0.1, HEIGHT/2 - 300, WIDTH * 1.8, 2000));
     
-        gameObjList.push(new MyRichImage('agari_1', WIDTH /2 - 100 - 120, HEIGHT/2+90, 250, 8, 1000, 0));
-        gameObjList.push(new MyRichImage('agari_2', WIDTH /2 + 100 - 120, HEIGHT/2+90, 250, 8, 1000, 300));
+        gameObjList.push(new MyRichImage('agari_1', WIDTH /2 - 100 - 120, HEIGHT/2-20, 250, 8, 1000, 0));
+        gameObjList.push(new MyRichImage('agari_2', WIDTH /2 + 100 - 120, HEIGHT/2-20, 250, 8, 1000, 300));
 
         calculateRole();
 
@@ -398,10 +398,20 @@ function calculateRole(){
     var roleEffectSize = ROLE_EFFECT_SIZE_BASE / Math.max(4, role_set.length + 1);
     for(var i = 0; i < role_set.length; i++){
         console.log(role_set[i], role[role_set[i]]);
-        gameObjList.push(new MyRichImage(role[role_set[i]].fileName, WIDTH/2 - roleEffectSize * 300 / 120 / 2, HEIGHT/2 + i * roleEffectSize * 0.8, roleEffectSize, 9, 750, i * 300));
+        gameObjList.push(new MyRichImage(role[role_set[i]].fileName, WIDTH/2 - roleEffectSize * 300 / 120 / 2, HEIGHT*0.66 + i * roleEffectSize * ROLE_MARGIN_COEFFICIENT, roleEffectSize, 9, 1500, i * 400));
     }
     var displayHan = han;
-    if(imageFiles[displayHan] === null) displayHan = '9';
-    gameObjList.push(new MyRichImage(displayHan, WIDTH/2 - 50, HEIGHT/2 + role_set.length * roleEffectSize * 0.8, roleEffectSize, 9, 750, role_set.length * 300));
-    gameObjList.push(new MyRichImage('han', WIDTH/2 + 50, HEIGHT/2 + role_set.length * roleEffectSize * 0.8, roleEffectSize, 9, 750, role_set.length * 300));
+    roleEffectSize*=1.4;
+    if(displayHan <= 9){
+        // 役満・数え役満は何も出さない
+        gameObjList.push(new MyRichImage('role_han_back', WIDTH/2 - 105, HEIGHT*0.66 + role_set.length * roleEffectSize * ROLE_MARGIN_COEFFICIENT * 0.8, roleEffectSize, 11, 750, role_set.length * 300));
+        gameObjList.push(new MyRichImage(displayHan, WIDTH/2 - 55, HEIGHT*0.66 + role_set.length * roleEffectSize * ROLE_MARGIN_COEFFICIENT * 0.8, roleEffectSize, 11, 750, role_set.length * 300));
+        gameObjList.push(new MyRichImage('han', WIDTH/2 + 0, HEIGHT*0.66 + role_set.length * roleEffectSize * ROLE_MARGIN_COEFFICIENT * 0.8, roleEffectSize, 11, 750, role_set.length * 300));    
+    }
+    for(var i = 0; i < Math.min(5, displayHan); i++){
+        myX = Math.random();
+        myY = Math.random();
+        myTime = 100 + 200 * Math.random();
+        gameObjList.push(new MyAnimation(2, -100 + WIDTH * myX, HEIGHT * 0.4 + 0.6 * HEIGHT * myY - 150, 300, myTime));
+    }
 }
