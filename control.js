@@ -331,6 +331,11 @@ function calculateRole(){
         } if(val) role_set.push("All Simples");
     }
 
+    //役牌
+    for (const tiles_s of tile_set) {
+        if(tiles_s[0].kind == "jihai") role_set.push("Value Tiles");
+    }
+
     //一盃口、二盃口
     var cnt = 0;
     var m=-1; n=-1;
@@ -360,7 +365,7 @@ function calculateRole(){
     if(set_kind.length == 1) role_set.push("Full Flush");
     else if(set_kind.length == 2 && set_kind.includes("jihai")) role_set.push("Half Flush");
 
-    //三暗刻、四暗刻
+    //トイトイ、三暗刻、四暗刻
     cnt_type = tiles_style.filter(value => value === true).length;
     if(cnt_type === 4) {
         if(!deleteflg) role_set.push("Four Triples");

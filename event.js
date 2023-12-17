@@ -164,6 +164,6 @@ function checkClickOfResultObj(x, y){
             if(resultObjList[i].checkClicked(x, y)){
                 resultObjList[i].clicked();
             }
-        } else miss.play();
+        } 
     }
 }

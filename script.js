@@ -172,6 +172,7 @@ function setMode(nextMode){
         resultObjList.push(new Button('backToTopForResult', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), HEIGHT*0.63 + menuButtonHeight * 1.2, menuButtonHeight));
         resultObjList.push(new ScoreBoard('center', 360, 200));
         mainBGM.stop();
+        gameStop.play();
     }
     mode = nextMode;
 }
@@ -210,7 +211,7 @@ function tick() {
         }
         drawGame();
         if (performance.now() - gameData.gameStartTime > TIME_MAX * 1000) {
-            gameStop.play();
+            //gameStop.play();
             fadeInBlackout(function() {
                 setMode(2);
                 fadeOutBlackout();

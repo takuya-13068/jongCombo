@@ -55,9 +55,10 @@ const startGameClick = new Howl({
     src      : ['./assets/sound/click.mp3'],
     autoplay : false,
     loop     : false,
-    volume   : 0.8,
+    volume   : 0.5,
     rate     : 1.0,
     onend: function(){
+        mainBGM.stop();
         mainBGM.play();
         mainBGM.fade(0,1,2000);
     }
@@ -91,6 +92,6 @@ const gameStop = new Howl({
     src      : ['./assets/sound/stop.mp3'],
     autoplay : false,
     loop     : false,
-    volume   : 0.4,
+    volume   : 0.2,
     rate     : 1.0,
 });
