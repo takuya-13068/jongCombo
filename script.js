@@ -72,8 +72,9 @@ function drawGame(){//ゲーム画面の描画
 
 function drawResult(){//リザルト画面の描画
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-    ctx2d.fillStyle = COLSET['green'];
-    ctx2d.fillRect(0, 0, WIDTH, HEIGHT);
+    var drawX = (t/24 % WIDTH);
+    ctx2d.drawImage(imageFiles['result_back'], drawX, 0, WIDTH, HEIGHT);
+    ctx2d.drawImage(imageFiles['result_back'], drawX+1 - WIDTH, 0, WIDTH, HEIGHT);
     for(i = 0; i < resultObjList.length; i++){
         resultObjList[i].draw();
     }
@@ -138,10 +139,12 @@ function setMode(nextMode){
         mainBGM.play();
     } else if (nextMode == 2){
         // リザルト画面に遷移するとき
-        resultObjList.push(new Button('backToHome', 30, 30, 70));
-        resultObjList.push(new Button('retry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
-//        resultObjList.push(new Button('entry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
-        resultObjList.push(new ScoreBoard('center', 230, 100));
+        for(var i = 0; i < 4; i++){
+            resultObjList.push(new MyRichImage('result_' + (i+1), WIDTH/2 + (i-2) * 90, 160, 100, 7, Infinity, i * 200));
+        }
+        resultObjList.push(new Button('retry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), HEIGHT*0.6, menuButtonHeight));
+        resultObjList.push(new Button('backToTopForResult', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), HEIGHT*0.63 + menuButtonHeight * 1.2, menuButtonHeight));
+        resultObjList.push(new ScoreBoard('center', 360, 200));
         mainBGM.stop();
     }
     mode = nextMode;

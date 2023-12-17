@@ -2,19 +2,20 @@ const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
 const COLSET = {green: '#116D4E', brown:'#4E3636', gray: '#555756', yellow: '#FAC62C'};
-const TIME_MAX = 60; // ゲーム時間（秒）
+const TIME_MAX = 6; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.5;
 
-const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'button_XXX.png' のファイルを用意する
+const buttonList = ['start', 'entry', 'retry', 'backToHome', 'backToTopForResult']; // img内に'button_XXX.png' のファイルを用意する
 const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 
                         'value_tiles', 'all_simples', 'reach', 'double_run', 'three_triples', 'full_straight', 'little_dragons', 'half_flush', '2_double_runs', 'full_flush', 'big_dragons', 'four_triples',
                         'top_back', 'top_back_1', 'top_back_2', 'top_back_3', 'top_back_4', 'scoreboard_back', 'timer', 'game_back', 'role_bar',
-                        'reach_1', 'reach_2', 'agari_1', 'agari_2', 'gauge_vertical', 'role_back', 'role_han_back']; // img内に'XX.webp'のファイルを用意する
+                        'reach_1', 'reach_2', 'agari_1', 'agari_2', 'gauge_vertical', 'role_back', 'role_han_back', 'result_back']; // img内に'XX.webp'のファイルを用意する
 const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15},
                             {id:'thunder', cntW:7, cntH:9, maxCnt:63},
                             {id:'fire', cntW:5, cntH:5, maxCnt:25},]
 const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo', 'han', 'plus', 
-                        '0_kanji','1_kanji','2_kanji','3_kanji','4_kanji','5_kanji','6_kanji','7_kanji','8_kanji','9_kanji'];
+                        '0_kanji','1_kanji','2_kanji','3_kanji','4_kanji','5_kanji','6_kanji','7_kanji','8_kanji','9_kanji',
+                        'result_1', 'result_2', 'result_3', 'result_4'];
 const menuButtonHeight = 110;
 const titleLogoHeight = 280;
 const tileEffectSize = 120;
@@ -159,7 +160,7 @@ class Button extends MyImage{
             setMode(1);
         } else if(this.kind == 'retry'){
             setMode(1);
-        } else if(this.kind == 'entry'){
+        } else if(this.kind == 'entry' || this.kind == 'backToTopForResult'){
             setMode(0);
         } else if(this.kind == 'backToHome'){
             setMode(0);
@@ -195,7 +196,7 @@ class Timer extends MyImage{
 class ScoreBoard extends MyImage{
     constructor (x, y, size){
         super('1', x, y, size);
-        this.score = gameData.score;
+        this.score = 0;
         // 常に横幅は5文字分確保しておく
         this.x+=this.w * 0.5;
         this.w*=5;
@@ -298,12 +299,15 @@ class MyRichImage extends MyImage{
                     ctx2d.globalAlpha = myT * -5 + 5
                 }
             }    
+            if(this.animationKind == 11){
+                ctx2d.globalAlpha = Math.min(1, ((t - this.initialTime) / 1000) * 5);
+            }
             if(this.animationKind == 9){
                 // 背景を表示
                 ctx2d.drawImage(imageFiles['role_back'], this.x - 15, this.y - 10, this.w + 40, this.h + 20);
             }        
             super.draw();
-            if(this.animationKind == 8 || this.animationKind == 9 || this.animationKind == 10){
+            if(this.animationKind == 8 || this.animationKind == 9 || this.animationKind == 10 || this.animationKind == 11){
                 ctx2d.globalAlpha = 1;
             }
         }
