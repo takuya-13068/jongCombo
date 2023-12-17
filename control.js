@@ -5,6 +5,13 @@ function compareFunc(a, b) {
 function drawTiles() {
     ctx2d.fillStyle = COLSET['gray'];
     ctx2d.fillRect(0, GameArea.y - 20, WIDTH, HEIGHT);
+    ctx2d.fillStyle = COLSET['yellow'];
+    var myHeight = (HEIGHT - GameArea.y) * (comboLimitTime / COMBO_MAX_TIME);
+    var myWidth = 10;
+    if(myHeight > 1){
+        ctx2d.drawImage(imageFiles['gauge_vertical'], 0, HEIGHT - myHeight, myWidth, myHeight);
+        ctx2d.drawImage(imageFiles['gauge_vertical'], WIDTH - myWidth, HEIGHT - myHeight, myWidth, myHeight);    
+    }
 
     for (let tile of tiles) {
         let i = tiles.indexOf(tile) % parseInt(GameArea.width / TILES_SIZE.width);
@@ -241,12 +248,15 @@ function updateScore(){
         comboLimitTime = COMBO_MAX_TIME;
         if(combo === 4) {
             reachMode = true;
-            gameObjList.push(new MyRichImage('reach', 'center', HEIGHT/2-50, 100, 1, 1000, 0));
+            gameObjList.push(new MyRichImage('reach_1', WIDTH /2 - 80 - 120, HEIGHT/2+100, 200, 8, 1000, 0));
+            gameObjList.push(new MyRichImage('reach_2', WIDTH /2 + 80 - 120, HEIGHT/2+100, 200, 8, 1000, 300));
         }
-    }
-
-    // calculate role point
-    else if(reachMode){
+        averagedX = (firstSelectedTile.x + secondSelectedTile.x + thirdSelectedTile.x)/3
+        averagedY = (firstSelectedTile.y + secondSelectedTile.y + thirdSelectedTile.y)/3
+        console.log(averagedX, averagedY);
+        gameObjList.push(new MyRichImage(combo + '_kanji', averagedX - 30, averagedY, 60, 8, 500, 0));
+        gameObjList.push(new MyRichImage('combo', averagedX+0, averagedY, 60, 8, 500, 0));
+    } else if(reachMode){ // calculate role point
         // 役成立
         removedTiles.push(firstSelectedTile, secondSelectedTile);
         let displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
@@ -254,6 +264,12 @@ function updateScore(){
         gameObjList.push(new GroupTile(firstSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
         displayX = removedTiles.length * TILES_SIZE.width * COMBO_TILE_SIZE_SCALE;
         gameObjList.push(new GroupTile(secondSelectedTile.kind, firstSelectedTile.value, displayX, displayY));
+
+        gameObjList.push(new MyAnimation(1, -WIDTH * 0.4, HEIGHT/2 - 100, WIDTH, 3000));
+        gameObjList.push(new MyAnimation(1, -WIDTH * 0.1, HEIGHT/2 - 300, WIDTH * 1.8, 2000));
+    
+        gameObjList.push(new MyRichImage('agari_1', WIDTH /2 - 100 - 120, HEIGHT/2-20, 250, 8, 1000, 0));
+        gameObjList.push(new MyRichImage('agari_2', WIDTH /2 + 100 - 120, HEIGHT/2-20, 250, 8, 1000, 300));
 
         calculateRole();
 
@@ -383,8 +399,23 @@ function calculateRole(){
 
     // エフェクトここから
     console.log(role_set);
+    var roleEffectSize = ROLE_EFFECT_SIZE_BASE / Math.max(4, role_set.length + 1);
     for(var i = 0; i < role_set.length; i++){
         console.log(role_set[i], role[role_set[i]]);
-        gameObjList.push(new MyRichImage(role[role_set[i]].fileName, WIDTH-200, 50 * i + 250, 40, 2, 1000, i * 500));
+        gameObjList.push(new MyRichImage(role[role_set[i]].fileName, WIDTH/2 - roleEffectSize * 300 / 120 / 2, HEIGHT*0.66 + i * roleEffectSize * ROLE_MARGIN_COEFFICIENT, roleEffectSize, 9, 1500, i * 400));
+    }
+    var displayHan = han;
+    roleEffectSize*=1.4;
+    if(displayHan <= 9){
+        // 役満・数え役満は何も出さない
+        gameObjList.push(new MyRichImage('role_han_back', WIDTH/2 - 105, HEIGHT*0.66 + role_set.length * roleEffectSize * ROLE_MARGIN_COEFFICIENT * 0.8, roleEffectSize, 11, 750, role_set.length * 300));
+        gameObjList.push(new MyRichImage(displayHan, WIDTH/2 - 55, HEIGHT*0.66 + role_set.length * roleEffectSize * ROLE_MARGIN_COEFFICIENT * 0.8, roleEffectSize, 11, 750, role_set.length * 300));
+        gameObjList.push(new MyRichImage('han', WIDTH/2 + 0, HEIGHT*0.66 + role_set.length * roleEffectSize * ROLE_MARGIN_COEFFICIENT * 0.8, roleEffectSize, 11, 750, role_set.length * 300));    
+    }
+    for(var i = 0; i < Math.min(5, displayHan); i++){
+        myX = Math.random();
+        myY = Math.random();
+        myTime = 100 + 200 * Math.random();
+        gameObjList.push(new MyAnimation(2, -100 + WIDTH * myX, HEIGHT * 0.4 + 0.6 * HEIGHT * myY - 150, 300, myTime));
     }
 }

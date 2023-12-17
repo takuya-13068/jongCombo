@@ -50,7 +50,7 @@ window.addEventListener('DOMContentLoaded', function(e){ ///キー入力イベ�
 
 function drawTitle(){//タイトル画面の描画
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-    drawX = (t/24 % WIDTH);
+    var drawX = (t/24 % WIDTH);
     ctx2d.drawImage(imageFiles['top_back'], drawX, 0, WIDTH, HEIGHT);
     ctx2d.drawImage(imageFiles['top_back'], drawX+1 - WIDTH, 0, WIDTH, HEIGHT);
     ctx2d.fillStyle="#C6C6C6BB";
@@ -62,6 +62,9 @@ function drawTitle(){//タイトル画面の描画
 
 function drawGame(){//ゲーム画面の描画
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
+    var drawX = (t/24 % WIDTH);
+    ctx2d.drawImage(imageFiles['role_bar'], drawX, HEIGHT*0.325, WIDTH, WIDTH/5);
+    ctx2d.drawImage(imageFiles['role_bar'], drawX+1-WIDTH, HEIGHT*0.325, WIDTH, WIDTH/5);
     drawTiles();
     for(var i = 0; i < gameObjList.length; i++){
         gameObjList[i].draw();
@@ -92,8 +95,7 @@ function startGame() {
 
     resetGameStatus();
     
-    gameObjList.push(new MyImage('game_back', 0, -HEIGHT * 0.10, HEIGHT*0.45));
-    gameObjList.push(new MyImage('role_bar', 0, HEIGHT*0.325, HEIGHT*0.065));
+    gameObjList.push(new MyImage('game_back', 0, -HEIGHT * 0.123, HEIGHT*0.45));
     gameObjList.push(new Button('backToHome', 30, 30, 70));
     gameObjList.push(new Timer(WIDTH*0.86, 30, HEIGHT*0.06));
     gameObjList.push(new ScoreBoard('center', 140, HEIGHT*0.12));
@@ -154,8 +156,8 @@ function setMode(nextMode){
     } else if (nextMode == 2){
         // リザルト画面に遷移するとき
         resultObjList.push(new Button('backToHome', 30, 30, 70));
-        resultObjList.push(new Button('retry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2 - menuButtonHeight * 1.2, menuButtonHeight));
-        resultObjList.push(new Button('entry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
+        resultObjList.push(new Button('retry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
+//        resultObjList.push(new Button('entry', WIDTH/2 - (menuButtonHeight / 120 * 450 / 2), (HEIGHT - menuButtonHeight)/2, menuButtonHeight));
         resultObjList.push(new ScoreBoard('center', 230, 100));
         mainBGM.stop();
     }

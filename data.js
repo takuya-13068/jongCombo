@@ -1,23 +1,28 @@
 const WIDTH = 720, HEIGHT = 1280;// キャンバスのサイズを指定
 
 const GameArea = {x: 0, y: 1280*4/10, width: WIDTH, height: HEIGHT*6/10, color: "rgba(0,0,0,1)"};
-const COLSET = {green: '#116D4E', brown:'#4E3636', gray: '#555756'};
+const COLSET = {green: '#116D4E', brown:'#4E3636', gray: '#555756', yellow: '#FAC62C'};
 const TIME_MAX = 60; // ゲーム時間（秒）
 const COMBO_TILE_SIZE_SCALE = 0.5;
 
 const buttonList = ['start', 'entry', 'retry', 'backToHome']; // img内に'button_XXX.png' のファイルを用意する
 const otherImagesList = ['logo', 'howto', 'gauge', 'gauge_full', 
-                        'value_tiles', 'all_simples', 'reach', 'double_run', 
+                        'value_tiles', 'all_simples', 'reach', 'double_run', 'three_triples', 'full_straight', 'little_dragons', 'half_flush', '2_double_runs', 'full_flush', 'big_dragons', 'four_triples',
                         'top_back', 'top_back_1', 'top_back_2', 'top_back_3', 'top_back_4', 'scoreboard_back', 'timer', 'game_back', 'role_bar',
-                        'reach_1', 'reach_2']; // img内に'XX.webp'のファイルを用意する
-const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15}]
-const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo'];
+                        'reach_1', 'reach_2', 'agari_1', 'agari_2', 'gauge_vertical', 'role_back', 'role_han_back']; // img内に'XX.webp'のファイルを用意する
+const animationImagesList = [{id:'explosion', cntW:5, cntH:3, maxCnt:15},
+                            {id:'thunder', cntW:7, cntH:9, maxCnt:63},
+                            {id:'fire', cntW:5, cntH:5, maxCnt:25},]
+const textImageList = ['0','1','2','3','4','5','6','7','8','9','colon', 'combo', 'han', 'plus', 
+                        '0_kanji','1_kanji','2_kanji','3_kanji','4_kanji','5_kanji','6_kanji','7_kanji','8_kanji','9_kanji'];
 const menuButtonHeight = 110;
 const titleLogoHeight = 280;
 const tileEffectSize = 120;
 const ScoreBoardLoop = 10;
 const ComboGaugeLoop = 10;
-const COMBO_MAX_TIME = 7;
+const COMBO_MAX_TIME = 10;
+const ROLE_MARGIN_COEFFICIENT = 1.1;
+const ROLE_EFFECT_SIZE_BASE = HEIGHT*0.2;
 
 const score = [100,200,400,800];
 
@@ -29,9 +34,9 @@ const score = [100,200,400,800];
 役満: 大三元, 四暗刻
 */
 const role = {"Reach": {han:1, fileName:'reach'}, "All Simples": {han:1, fileName:'all_simples'}, "Double-Run": {han:1, fileName:'double_run'}, "Value Tiles": {han:1, fileName:'value_tiles'}, 
-        "Three Triples": {han:2, fileName:'reach'}, "Full Straight": {han:2, fileName:'reach'}, "Little Dragons": {han:2, fileName:'reach'}, "All Triles": 2,
-        "Half Flush": {han:3, fileName:'reach'}, "2 Double Runs": {han:3, fileName:'reach'}, "Full Flush": {han:6, fileName:'reach'}, 
-        "Big Dragons": {han:13, fileName:'reach'}, "Four Triples": {han:13, fileName:'reach'}
+        "Three Triples": {han:2, fileName:'three_triples'}, "Full straight": {han:2, fileName:'full_straight'}, "Little Dragons": {han:2, fileName:'little_dragons'}, "All Triles": {han:2, fileName:'all_triples'},
+        "Half Flush": {han:3, fileName:'half_flush'}, "2 Double Runs": {han:3, fileName:'2_double_runs'}, "Full Flush": {han:6, fileName:'full_flush'}, 
+        "Big Dragons": {han:13, fileName:'big_dragons'}, "Four Triples": {han:13, fileName:'four_triples'}
     };
 const role_score = {1:1000, 2:2000, 3:4000, 4:8000, 5:8000, 6:12000, 7:12000, 8:16000, 9:16000, 10:16000, 11:24000, 12:24000, 13:32000};
 
@@ -125,7 +130,7 @@ class MyImage{
         }    
         if(this.kind == 'howto'){
             ctx2d.fillStyle="#00000090";
-            ctx2d.fillRect(this.x+40, drawy+48, this.w - 58, this.h - 58);
+            ctx2d.fillRect(this.x+40, drawy+48, this.w - 58, this.h - 62);
         }
         ctx2d.drawImage(imageFiles[this.kind], this.x + this.w * (1 - this.scale) / 2, drawy + this.h * (1 - this.scale) / 2, this.w * this.scale, this.h * this.scale);
     }
@@ -257,6 +262,10 @@ class MyRichImage extends MyImage{
             // 右から左へ登場
             this.towardX = this.x;
             this.x+=100;
+        } else if(this.animationKind == 9 || this.animationKind == 10){
+            // 左から左へ登場（素早い）
+            this.towardX = this.x;
+            this.x-=WIDTH * 2;
         } else if(this.animationKind == 5){
             // 上から下へ登場
             this.towardY = this.y;
@@ -267,20 +276,39 @@ class MyRichImage extends MyImage{
         }
     }
     draw(){
+        var myT = ((t - this.initialTime) / this.time); // 0(書き始め)〜1(書き終わり)
         if(this.animationKind == 2){
-            this.scale = 1 + 1 - ((t - this.initialTime) / this.time);
+            this.scale = 2 - myT;
         } else if(this.animationKind == 3 || this.animationKind == 5){
             this.y = 0.9 * this.y + 0.1 * this.towardY;            
         } else if(this.animationKind == 4){
             this.x = 0.9 * this.x + 0.1 * this.towardX;
+        } else if(this.animationKind == 9 || this.animationKind == 10){
+            this.x = 0.7 * this.x + 0.3 * this.towardX;
         } else if(this.animationKind == 7){
             this.scale = 0.8 * this.scale + 0.2 * 1;
         } else if(this.animationKind == 8){
             // 立直
-            
+            this.scale = Math.max(1, 1 + 1 / Math.pow((myT+0.8), 3) - 0.8);
+        } else if(this.animationKind == 11){
+            this.scale = Math.max(1, 1 + 1 / Math.pow((myT+0.8), 3) - 0.8);
         }
         if(performance.now() > this.initialTime && performance.now() - this.initialTime < this.time){
+            if(this.animationKind == 8  || this.animationKind == 9 || this.animationKind == 10){
+                if(myT < 0.2){
+                    ctx2d.globalAlpha = myT * 5;
+                } else if(myT > 0.8){
+                    ctx2d.globalAlpha = myT * -5 + 5
+                }
+            }    
+            if(this.animationKind == 9){
+                // 背景を表示
+                ctx2d.drawImage(imageFiles['role_back'], this.x - 15, this.y - 10, this.w + 40, this.h + 20);
+            }        
             super.draw();
+            if(this.animationKind == 8 || this.animationKind == 9 || this.animationKind == 10){
+                ctx2d.globalAlpha = 1;
+            }
         }
     }
 }
