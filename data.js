@@ -36,7 +36,8 @@ const score = [100,200,400,800];
 */
 const role = {"Reach": {han:1, fileName:'reach'}, "All Simples": {han:1, fileName:'all_simples'}, "Double-Run": {han:1, fileName:'double_run'},
         "Value Tiles": {han:1, fileName:'value_tiles'}, //役牌
-        "Three Triples": {han:2, fileName:'three_triples'}, "Full straight": {han:2, fileName:'full_straight'}, "Little Dragons": {han:2, fileName:'little_dragons'}, "All Triles": {han:2, fileName:'all_triples'},
+        "Three Triples": {han:2, fileName:'three_triples'}, "Full straight": {han:2, fileName:'full_straight'},
+        "Little Dragons": {han:2, fileName:'little_dragons'}, "All Triples": {han:2, fileName:'all_triples'},//トイトイ
         "Half Flush": {han:3, fileName:'half_flush'}, "2 Double Runs": {han:3, fileName:'2_double_runs'}, 
         "Full Flush": {han:6, fileName:'full_flush'}, 
         "Big Dragons": {han:13, fileName:'big_dragons'}, "Four Triples": {han:13, fileName:'four_triples'}
@@ -160,10 +161,17 @@ class Button extends MyImage{
     clicked(){
         if(this.kind == 'start'){
             startGameClick.play();
-            setMode(1);
+            fadeInBlackout(function() {
+                setMode(1);
+                fadeOutBlackout();
+            });
+            
         } else if(this.kind == 'retry'){
             startGameClick.play();
-            setMode(1);
+            fadeInBlackout(function() {
+                setMode(1);
+                fadeOutBlackout();
+            });
         } else if(this.kind == 'entry' || this.kind == 'backToTopForResult'){
             setMode(0);
         } else if(this.kind == 'backToHome'){
