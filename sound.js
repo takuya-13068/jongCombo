@@ -6,7 +6,7 @@ const mainBGM = new Howl({
     //ループ再生
     loop     : true,
     //音量 0〜1.0
-    volume   : 0.5,
+    volume   : 0.3,
     //再生速度 0.5〜4.0 （1.0がデフォルト）
     rate     : 1.0,
     //再生開始位置と終了位置の秒数をミリ秒で指定
@@ -43,8 +43,8 @@ const select = new Howl({
     rate     : 1.0,
 });
   
-const reachVoice = new Howl({
-    src      : ['./assets/sound/reach.m4a'],
+const reach = new Howl({
+    src      : ['./assets/sound/reach.mp3', './assets/sound/reach.m4a'],
     autoplay : false,
     loop     : false,
     volume   : 0.5,
@@ -71,5 +71,19 @@ const miss = new Howl({
     rate     : 1.0,
 });
 
+const getSet = new Howl({
+    src      : ['./assets/sound/set.mp3'],
+    autoplay : false,
+    loop     : false,
+    volume   : 1.0,
+    rate     : 1.0,
+});
 
+const getRole = new Howl({
+    src      : ['./assets/sound/role.mp3'],
+    autoplay : false,
+    loop     : false,
+    volume   : 1.0,
+    rate     : 1.0,
+});
 

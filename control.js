@@ -247,6 +247,7 @@ function updateScore(){
         combostart = performance.now() - initialPfnw;
         comboLimitTime = COMBO_MAX_TIME;
         if(combo === 4) {
+            reach.play();
             reachMode = true;
             gameObjList.push(new MyRichImage('reach_1', WIDTH /2 - 80 - 120, HEIGHT/2+100, 200, 8, 1000, 0));
             gameObjList.push(new MyRichImage('reach_2', WIDTH /2 + 80 - 120, HEIGHT/2+100, 200, 8, 1000, 300));
@@ -285,7 +286,7 @@ function updateScore(){
 }
 
 function validateOneNine(index){
-    if (index == 1 && index == 9) return true;
+    if (index == 1 || index == 9) return true;
     else return false;
 }
 
