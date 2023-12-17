@@ -378,11 +378,12 @@ function calculateRole(){
     for (let i=0; i<5; i++){
         out = validateDragon(jud_dragon[i].kind, jud_dragon[i].value);
         if(out != -1){
+            console.log(out);
             if(i != 4){
-                big[out] = true;
-                little[out] = true;
+                big[out-1] = true;
+                little[out-1] = true;
             } else{
-                little[out] = true;
+                little[out-1] = true;
             }
         } 
     }
@@ -392,7 +393,9 @@ function calculateRole(){
 
     // 名称から飜計算
     console.log(role_set);
+    console.log(han);
     for (const name of role_set){
+        console.log(name);
         han += role[name].han;
     } 
     console.log(han);
