@@ -95,9 +95,11 @@ function touchEndEvent(){
 
                 //スコアを少し減らす
                 deleteTileCnt += 1;
+                deleteflg = true;
                 gameData.score = Math.max(0, gameData.score - 50*deleteTileCnt);
             } else{
                 deleteTileCnt += 1;
+                deleteflg = true;
             }
             
         }
@@ -175,7 +177,7 @@ function checkClickOfTitleObj(x, y){
             if(titleObjList[i].checkClicked(x, y)){
                 titleObjList[i].clicked();
             }
-        }
+        } else miss.play();
     }
 }
 function checkClickOfResultObj(x, y){
@@ -184,6 +186,6 @@ function checkClickOfResultObj(x, y){
             if(resultObjList[i].checkClicked(x, y)){
                 resultObjList[i].clicked();
             }
-        }
+        } else miss.play();
     }
 }

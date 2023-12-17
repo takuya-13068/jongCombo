@@ -34,7 +34,8 @@ let touchEndY = 0;
 
 let lastTouchX = 0;
 let lastTouchY = 0;
-var deleteTileCnt = 0;
+let deleteTileCnt = 0;
+let deleteflg = false;
 
 window.addEventListener('load', init); //ロード完了後にinitが実行されるように、ロードイベントを登録
 window.addEventListener('DOMContentLoaded', function(e){ ///キー入力イベントを登録
@@ -91,14 +92,31 @@ function startGame() {
     createField();
     fieldCreated = true;
     ctx2d.clearRect(0, 0, WIDTH, HEIGHT);
-    gameData.gameStartTime = performance.now(); // ゲーム開始時間を記録
-    gameData.score = 0;
-    gameObjList = [];
+
+    resetGameStatus();
+    
     gameObjList.push(new MyImage('game_back', 0, -HEIGHT * 0.123, HEIGHT*0.45));
     gameObjList.push(new Button('backToHome', 30, 30, 70));
     gameObjList.push(new Timer(WIDTH*0.86, 30, HEIGHT*0.06));
     gameObjList.push(new ScoreBoard('center', 140, HEIGHT*0.12));
     gameObjList.push(new ComboGauge('center', 280, HEIGHT*0.1));
+
+}
+
+function resetGameStatus(){
+    gameData.gameStartTime = performance.now(); // ゲーム開始時間を記録
+    gameData.score = 0;
+    gameObjList = [];
+    combo = 0;
+    comboLimitTime = 0;
+    reachMode = false;
+    deleteTileCnt = 0;
+
+    selectedTile = null;
+    firstSelectedTile = null; // 最初に選択されたタイルを追跡する変数
+    secondSelectedTile = null; // 2番目に選択されたタイルを追跡する変数
+    thirdSelectedTile = null;
+    removedTiles = [];
 }
 
 
@@ -135,7 +153,6 @@ function setMode(nextMode){
         titleObjList.push(new MyImage('howto', 'center', HEIGHT*0.72, titleLogoHeight));
     } else if(nextMode == 1){
         startGame();
-        mainBGM.play();
     } else if (nextMode == 2){
         // リザルト画面に遷移するとき
         resultObjList.push(new Button('backToHome', 30, 30, 70));
@@ -166,6 +183,7 @@ function tick() {
                     return v.constructor.name != 'GroupTile';
                 })
                 reachMode = false;
+                deleteflg = false;
             }
         }
         if (reachMode){ //雀頭選択立直モード

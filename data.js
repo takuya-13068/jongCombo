@@ -20,7 +20,7 @@ const titleLogoHeight = 280;
 const tileEffectSize = 120;
 const ScoreBoardLoop = 10;
 const ComboGaugeLoop = 10;
-const COMBO_MAX_TIME = 50;
+const COMBO_MAX_TIME = 10;
 const ROLE_MARGIN_COEFFICIENT = 1.1;
 const ROLE_EFFECT_SIZE_BASE = HEIGHT*0.2;
 
@@ -28,13 +28,13 @@ const score = [100,200,400,800];
 
 /*役スコア
 1飜: 立直, タンヤオ, ドラ, 一盃口
-2飜: 三暗刻, 小三元, 一気通貫
+2飜: 三暗刻, 小三元, 一気通貫, トイトイ
 3飜: 混一色, 二盃口
 6飜: 清一色
 役満: 大三元, 四暗刻
 */
 const role = {"Reach": {han:1, fileName:'reach'}, "All Simples": {han:1, fileName:'all_simples'}, "Double-Run": {han:1, fileName:'double_run'}, "Value Tiles": {han:1, fileName:'value_tiles'}, 
-        "Three Triples": {han:2, fileName:'three_triples'}, "Full straight": {han:2, fileName:'full_straight'}, "Little Dragons": {han:2, fileName:'little_dragons'}, 
+        "Three Triples": {han:2, fileName:'three_triples'}, "Full straight": {han:2, fileName:'full_straight'}, "Little Dragons": {han:2, fileName:'little_dragons'}, "All Triles": {han:2, fileName:'all_triples'},
         "Half Flush": {han:3, fileName:'half_flush'}, "2 Double Runs": {han:3, fileName:'2_double_runs'}, "Full Flush": {han:6, fileName:'full_flush'}, 
         "Big Dragons": {han:13, fileName:'big_dragons'}, "Four Triples": {han:13, fileName:'four_triples'}
     };
@@ -156,12 +156,15 @@ class Button extends MyImage{
     }
     clicked(){
         if(this.kind == 'start'){
+            startGameClick.play();
             setMode(1);
         } else if(this.kind == 'retry'){
+            startGameClick.play();
             setMode(1);
         } else if(this.kind == 'entry'){
             setMode(0);
         } else if(this.kind == 'backToHome'){
+            mainBGM.stop();
             setMode(0);
         }
     }
