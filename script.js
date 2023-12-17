@@ -162,6 +162,7 @@ function setMode(nextMode){
         titleObjList.push(new MyImage('howto', 'center', HEIGHT*0.72, titleLogoHeight));
     } else if(nextMode == 1){
         startGame();
+        
     } else if (nextMode == 2){
         // リザルト画面に遷移するとき
         for(var i = 0; i < 4; i++){

@@ -161,10 +161,17 @@ class Button extends MyImage{
     clicked(){
         if(this.kind == 'start'){
             startGameClick.play();
-            setMode(1);
+            fadeInBlackout(function() {
+                setMode(1);
+                fadeOutBlackout();
+            });
+            
         } else if(this.kind == 'retry'){
             startGameClick.play();
-            setMode(1);
+            fadeInBlackout(function() {
+                setMode(1);
+                fadeOutBlackout();
+            });
         } else if(this.kind == 'entry' || this.kind == 'backToTopForResult'){
             setMode(0);
         } else if(this.kind == 'backToHome'){
