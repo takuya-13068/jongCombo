@@ -173,10 +173,17 @@ class Button extends MyImage{
                 fadeOutBlackout();
             });
         } else if(this.kind == 'entry' || this.kind == 'backToTopForResult'){
-            setMode(0);
+            startGameClick.play();
+            fadeInBlackout(function() {
+                setMode(0);
+                fadeOutBlackout();
+            });
         } else if(this.kind == 'backToHome'){
             mainBGM.stop();
-            setMode(0);
+            fadeInBlackout(function() {
+                setMode(0);
+                fadeOutBlackout();
+            });
         }
     }
 }
