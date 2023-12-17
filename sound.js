@@ -1,12 +1,12 @@
 const mainBGM = new Howl({
     //複数のファイル形式を指定可能。配列順に評価しそのブラウザが対応するファイル形式を再生します。
-    src      : ['./assets/sound/mainGame.mp3'],
+    src      : ['./assets/sound/mainGame2.mp3', './assets/sound/mainGame.mp3'],
     //自動再生
     autoplay : false,
     //ループ再生
     loop     : true,
     //音量 0〜1.0
-    volume   : 0.3,
+    volume   : 0.2,
     //再生速度 0.5〜4.0 （1.0がデフォルト）
     rate     : 1.0,
     //再生開始位置と終了位置の秒数をミリ秒で指定

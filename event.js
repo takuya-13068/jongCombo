@@ -101,7 +101,6 @@ function touchEndEvent(){
                 deleteTileCnt += 1;
                 deleteflg = true;
             }
-            
         }
         resetSelection();
     }, { passive: false });
@@ -142,29 +141,6 @@ function clickEvent(){
             }
         
             if (clickedTile) { // 選択できるか条件
-                
-                /*
-                // 選択解除
-                if (clickedTile === firstSelectedTile) {
-                    firstSelectedTile = null;
-                } else if (clickedTile === secondSelectedTile) {
-                    secondSelectedTile = null;
-                } else if (clickedTile === thirdSelectedTile) {
-                    thirdSelectedTile = null;
-                } 
-                //何個目の選択タイルか判定
-                else if (!firstSelectedTile) { // 1番目のタイルを選択
-                    firstSelectedTile = clickedTile; 
-                } else if (!secondSelectedTile && ValidateSecondTile(firstSelectedTile, clickedTile, reachMode)) { // 2番目のタイルを選択
-                    secondSelectedTile = clickedTile; 
-                } else if (secondSelectedTile && ValidateThirdTile(firstSelectedTile, secondSelectedTile, clickedTile)) { // 3番目のタイルを選択
-                    thirdSelectedTile = clickedTile; 
-                } else {
-                    canSelect = false; // タイルが選択できない場合
-                }
-                */
-        
-                //console.log("Selected Tile:", clickedTile); // 選択したタイルの情報を出力
                 drawTiles(); // タイルを再描画
             }
         } 
@@ -177,7 +153,7 @@ function checkClickOfTitleObj(x, y){
             if(titleObjList[i].checkClicked(x, y)){
                 titleObjList[i].clicked();
             }
-        } else miss.play();
+        }
     }
 }
 function checkClickOfResultObj(x, y){
