@@ -73,7 +73,7 @@ function touchMoveEvent(){
 function touchEndEvent(){
     canvas.addEventListener('touchend', function(e) {
         e.preventDefault();
-        if(!secondSelectedTile){
+        if(mode ===1 && !secondSelectedTile){
             if(deleteTileCnt != -1){
                 const rect = canvas.getBoundingClientRect();
                 let touch = e.touches[0];
