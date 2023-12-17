@@ -210,7 +210,11 @@ function tick() {
         }
         drawGame();
         if (performance.now() - gameData.gameStartTime > TIME_MAX * 1000) {
-            setMode(2); // リザルト画面へ
+            gameStop.play();
+            fadeInBlackout(function() {
+                setMode(2);
+                fadeOutBlackout();
+            });
         }
     } else if (mode === 2) {
         drawResult();

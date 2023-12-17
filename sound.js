@@ -87,3 +87,10 @@ const getRole = new Howl({
     rate     : 1.0,
 });
 
+const gameStop = new Howl({
+    src      : ['./assets/sound/stop.mp3'],
+    autoplay : false,
+    loop     : false,
+    volume   : 1.0,
+    rate     : 1.0,
+});
