@@ -168,12 +168,9 @@ class Button extends MyImage{
             
         } else if(this.kind == 'retry'){
             startGameClick.play();
-            fadeInBlackout(function() {
-                setMode(1);
-                fadeOutBlackout();
-            });
+            setMode(1);
         } else if(this.kind == 'entry' || this.kind == 'backToTopForResult'){
-            startGameClick.play();
+            //startGameClick.play();
             fadeInBlackout(function() {
                 setMode(0);
                 fadeOutBlackout();
