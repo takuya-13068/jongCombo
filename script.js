@@ -200,7 +200,7 @@ function tick() {
         if (reachMode){ //雀頭選択立直モード
             if(secondSelectedTile != null){
                 getRole.play();
-                updateScore();
+                removeSelectedTiles();
             }
         } else if (thirdSelectedTile != null) {
             getSet.play();

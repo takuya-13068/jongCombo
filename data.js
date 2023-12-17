@@ -34,9 +34,11 @@ const score = [100,200,400,800];
 6飜: 清一色
 役満: 大三元, 四暗刻
 */
-const role = {"Reach": {han:1, fileName:'reach'}, "All Simples": {han:1, fileName:'all_simples'}, "Double-Run": {han:1, fileName:'double_run'}, "Value Tiles": {han:1, fileName:'value_tiles'}, 
+const role = {"Reach": {han:1, fileName:'reach'}, "All Simples": {han:1, fileName:'all_simples'}, "Double-Run": {han:1, fileName:'double_run'},
+        "Value Tiles": {han:1, fileName:'value_tiles'}, //役牌
         "Three Triples": {han:2, fileName:'three_triples'}, "Full straight": {han:2, fileName:'full_straight'}, "Little Dragons": {han:2, fileName:'little_dragons'}, "All Triles": {han:2, fileName:'all_triples'},
-        "Half Flush": {han:3, fileName:'half_flush'}, "2 Double Runs": {han:3, fileName:'2_double_runs'}, "Full Flush": {han:6, fileName:'full_flush'}, 
+        "Half Flush": {han:3, fileName:'half_flush'}, "2 Double Runs": {han:3, fileName:'2_double_runs'}, 
+        "Full Flush": {han:6, fileName:'full_flush'}, 
         "Big Dragons": {han:13, fileName:'big_dragons'}, "Four Triples": {han:13, fileName:'four_triples'}
     };
 const role_score = {1:1000, 2:2000, 3:4000, 4:8000, 5:8000, 6:12000, 7:12000, 8:16000, 9:16000, 10:16000, 11:24000, 12:24000, 13:32000};

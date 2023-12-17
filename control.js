@@ -176,7 +176,9 @@ function getTilePosFromIndex(tileIndex){
 
 function removeSelectedTiles() {
     // 選択されたタイルの情報を取得, 配列に追加
-    let selectedTiles = [firstSelectedTile, secondSelectedTile, thirdSelectedTile];
+    let selectedTiles;
+    if(!reachMode) selectedTiles = [firstSelectedTile, secondSelectedTile, thirdSelectedTile];
+    else selectedTiles = [firstSelectedTile, secondSelectedTile];
 
     selectedTiles.sort((a, b) => a.value - b.value);
     
@@ -190,16 +192,18 @@ function removeSelectedTiles() {
         removedTiles.push(selectedTiles[selectedTiles.length-3+i]);
     }
 
-    // Score
-    updateScore();
-
     // 選択されたタイルのインデックスを取得
-    let selectedTileIndices = [tiles.indexOf(firstSelectedTile), tiles.indexOf(secondSelectedTile), tiles.indexOf(thirdSelectedTile)];
+    let selectedTileIndices;
+    if(!reachMode) selectedTileIndices = [tiles.indexOf(firstSelectedTile), tiles.indexOf(secondSelectedTile), tiles.indexOf(thirdSelectedTile)];
+    else selectedTileIndices = [tiles.indexOf(firstSelectedTile), tiles.indexOf(secondSelectedTile)];
     selectedTileIndices = selectedTileIndices.sort(compareFunc);
     selectedTileIndices = [...new Set(selectedTileIndices)];
 
+    // Score
+    updateScore();
+
     // タイルを削除し、必要なタイルを移動
-    //console.log(selectedTileIndices);
+    console.log(selectedTileIndices);
     selectedTileIndices.forEach(tileIndex => {
         // アニメーションの追加
         pos = getTilePosFromIndex(tileIndex);
@@ -389,7 +393,6 @@ function calculateRole(){
     // 名称から飜計算
     console.log(role_set);
     for (const name of role_set){
-        console.log(name);
         han += role[name].han;
     } 
     console.log(han);
